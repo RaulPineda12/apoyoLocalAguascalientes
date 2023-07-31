@@ -1,0 +1,24 @@
+#mapContainer {
+  width: 100%;
+  height: 400px; /* Establece una altura inicial, puedes ajustarla según tus necesidades */
+}
+
+/* Hace que el mapa dentro del contenedor sea responsivo */
+agm-map {
+  width: 100%;
+  height: 100%;
+}
+
+.form-container {
+  max-width: 600px; /* Ancho máximo del div en pantallas grandes */
+  margin: 0 auto; /* Centra el div horizontalmente */
+  padding: 20px;
+}
+
+/* Estilo para pantallas más pequeñas */
+@media screen and (max-width: 767px) {
+  .form-container {
+    max-width: 100%; /* El div ocupará todo el ancho disponible */
+    padding: 10px;
+  }
+}

@@ -1,0 +1,207 @@
+<br><br>
+<div class="container fadeInAnimation center-content mt-5" style="flex-direction: column;">
+    <div class="box-shadow-black container form-box form-container" style="background-color: white;">
+        <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mb-4">Agregar negocio</h2>
+        <h4 class="headers-text">Datos Generales</h4>
+        <!--nombre del negocio-->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="nombre">Nombre del negocio *</label>
+            <input type="text" id="nombre" class="form-control" />
+        </div>
+
+        <!--descripcion-->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="descripcion">Descripcion breve del negocio * <br> <span class="text-muted">(Quienes son y que venden)</span></label>
+            <textarea type="text" id="descripcion"  rows="5" class="form-control"></textarea>
+        </div>
+
+        <!--categoria-->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="categoria">Seleccione la categoria del negocio *</label>
+            <select name="categoria" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                <option selected>Comida</option>
+                <option value="1">Joyeria</option>
+                <option value="2">Tecnologia</option>
+                <option value="3">Otra</option>
+            </select>              
+        </div>
+
+        <!--CONTACTO-->
+        <h4 class="headers-text">Contacto</h4>
+        <!--numero telefonico-->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="telefono">Número teléfonico *</label>
+            <input type="text" id="telefono" class="form-control" />
+        </div>
+
+        <!--CONTACTO-->
+        <h4 class="headers-text">Productos y/o Servicios</h4>
+        <!--Productos y/o servicios-->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="productos">Agregue los productos y/o servicios que ofrece * <br><span class="text-muted">(Máximo 8)</span></label>
+            <br>
+            <div *ngFor="let input of inputList; let i = index" class="center-content">
+                <div class="input-group mb-3">
+                    <label for="productos" class="center-content me-2">#{{i+1}} </label>
+                    <input type="text" id="productos" name="productos" class="form-control" *ngIf="input" [value]="input.value" (input)="onInputChange($event, i)">
+                    <button class="btn btn-danger" type="button" id="button-addon2" (click)="removerProducto(i)">Eliminar</button>
+                </div>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-primary mt-1" (click)="agregarProducto()">Agregar</button>
+            </div>
+        </div>
+
+        <!--DIRECCION-->
+        <h4 class="headers-text">Dirección</h4>
+        <!--Calle-->
+        <div class="input-group mb-3">
+            <span class="input-group-text" name="calle">Calle</span>
+            <input type="text" class="form-control">
+        </div>
+        <!--Numero-->
+        <div class="input-group mb-3">
+            <span class="input-group-text" name="numero">Número</span>
+            <input type="text" class="form-control">
+        </div>
+        <!--Interior-->
+        <div class="input-group mb-3">
+            <span class="input-group-text" name="interior">Interior <small class="text-muted">(Opcional)</small></span>
+            <input type="text" class="form-control">
+        </div>
+        <!--Colonia-->
+        <div class="input-group mb-3">
+            <span class="input-group-text" name="colonia">Colonia</span>
+            <input type="text" class="form-control">
+        </div>
+        <!--cp-->
+        <div class="input-group mb-4">
+            <span class="input-group-text" name="cp">Código Postal</span>
+            <input type="number" class="form-control">
+        </div>
+
+        <!--Horario-->
+        <h4 class="headers-text">Horarios *</h4>
+        <span class="text-muted mb-5">(Escriba los horarios que maneja su negocio)</span>
+        
+        <div class="row center-content mb-4" style="border: 1px dashed lightslategrey; border-radius: 5em;">
+            <p class="center-content mt-2" style="color: lightslategrey;">Ejemplo:</p>
+            <div class="col-2 col-sm-2">
+                <label for="martes" class="col-form-label" style="color: lightslategray;">Martes</label>
+            </div>
+            <div class="col-6 col-sm-6 mb-2">
+                <input type="text" id="martes" class="form-control" aria-describedby="passwordHelpInline" name="martes" value="10:00am - 6:00pm" disabled>
+            </div>
+        </div>
+
+        <div class="form-outline mt-2 mb-4">
+            <div *ngFor="let dia of diasSemana" class="mb-1">
+                <div class="row center-content">
+                    <div class="col-3 col-sm-3">
+                        <label for="{{dia}}" class="col-form-label">{{dia}}</label>
+                    </div>
+                    <div class="col-8 col-sm-8">
+                        <input type="text" id="{{dia}}" class="form-control" aria-describedby="passwordHelpInline" [(ngModel)]="horarios[dia]" name="{{ dia }}">
+                    </div>
+                </div>
+            </div>
+            <div class="center-content mt-2">
+                <button class="btn btn-primary" (click)="guardarHorarios()">Guardar</button>
+            </div>
+        </div>
+
+
+        <!--UBICACION EN GOOGLE MAPS-->
+        <h4 class="mb-4">Ubicación en Google Maps</h4>
+        <h5 class="mb-4">Seleccione la ubicación de su negocio en el mapa</h5>
+        <h4 *ngIf="this.locationChosen" class="center-content"><span class="badge rounded-pill bg-success mb-2">Ubicación seleccionada!</span></h4>
+
+        <div id="mapContainer" class="box-shadow-black mb-4">
+            <agm-map
+            [latitude]="this.latitude"
+            [longitude]="longitude"
+            [zoom]="14"
+            [mapTypeControl]="true"
+            [fullscreenControl]="true"
+            [streetViewControl]="true"
+            (mapClick)="onChoseLocation($event)">
+                <agm-marker [latitude]="this.latitude" [longitude]="longitude" *ngIf="this.locationChosen">
+
+                </agm-marker>
+            </agm-map>
+        </div>
+
+        <!--Redes sociales-->
+        <h4 class="headers-text">Redes Sociales</h4>
+        <p><span class="text-muted mb-5">Agrega los enlaces URL de tus páginas de redes sociales</span></p>
+
+        <!--facebook-->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="facebook">
+                <i class="fa fa-facebook-square fa-2x" style="color: blue;" aria-hidden="true"></i>
+                Página de Facebook <span class="text-muted mb-5">(opcional)</span></label>
+            <input type="search" id="facebook" class="form-control" />
+        </div>
+
+        <!--instagram-->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="instagram">
+                <i class="fa fa-instagram fa-2x" style="color: #C31EF4;" aria-hidden="true"></i>
+                Página de Instagram <span class="text-muted mb-5">(opcional)</span></label>
+            <input type="search" id="instagram" class="form-control" />
+        </div>
+
+        <!--Whatsapp-->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="whatsapp">
+                <i class="fa fa-whatsapp fa-2x" style="color: green;" aria-hidden="true"></i>
+                Whatsapp <span class="text-muted mb-5">(opcional)</span></label>
+            <input type="text" id="whatsapp" class="form-control" />
+        </div>
+
+        <!--Imagenes de los productos-->
+        <h4 class="headers-text">Imagenes</h4>
+        <div class="form-outline mb-4">
+            <label class="form-label" for="imagenes">Agrega imagenes de los productos y/o servicios que ofreces * <br><span class="text-muted">(Máximo 4)</span></label>
+            <br>
+            <div *ngFor="let input of input_imagenes; let i = index" class="center-content">
+                <div class="input-group mb-3">
+                    <label for="imagenes" class="center-content me-2">#{{i+1}} </label>
+                    <input type="search" id="imagenes" name="imagenes" class="form-control" *ngIf="input" [value]="input.imagen" (input)="onInputImageChange($event, i)">
+                    <button class="btn btn-danger" type="button" id="button-addon2" (click)="removerImagen(i)">Eliminar</button>
+                </div>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-primary mt-1" (click)="agregarImagen()">Agregar</button>
+                <button *ngIf="this.input_imagenes.length > 0" class="btn btn-success mt-2" (click)="imprimirImagenes()">Guardar</button>
+            </div>
+        </div>
+
+        <!--image preview-->
+        <div class="container">
+            <div class="row center-content">
+                <div class="col-6 mb-4" *ngFor="let imagen of input_imagenes; let i = index">
+                    <div class="text-center">
+                        <img [src]="imagen.imagen" class="box-shadow-black" width="100%" id="ImageUrlPreview" onerror="this.src='../../../assets/images/noImage.png'" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--script para las imagenes-->
+
+<script>
+    $(document).ready(function(){
+        var output = document.getElementById("ImageUrlPreview")
+        output.src = $("#imagen").val();
+    })
+
+    $("#imagen").on("change", function () {
+        var output = document.getElementById("ImageUrlPreview")
+        output.src= $(this).val();
+    })
+</script>

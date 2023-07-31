@@ -1,0 +1,54 @@
+  <nav class="navbar navbar-expand-lg mb-5 bg-blue fixed-top  p-3 shadow-sm animate__animated animate__fadeInDown animate__slower">
+    <div class="container">
+      <!--Brand name-->
+      <a class="navbar-brand text-white" href="#">
+        <i class="fa fa-money fx-lg" aria-hidden="true"></i> Gobierno de Aguascalinetes
+      </a>
+      <!--expantion button-->
+      <button class="navbar-toggler mb-3 text-white" style="border-color:white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa fa-bars text-white" aria-hidden="true" ></i>
+      </button> 
+
+      <!--list of topic-->
+      <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto">
+          <!--search element-->
+        <div class="input-group">
+            <span class="border-warning input-group-text bg-warning text-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control border-warning" style="color:#7a7a7a">
+            <button class="btn btn-warning text-white" style="font-weight: bold;">Buscar</button>
+        </div>
+        <!--Categories dropdown-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mx-2 text-uppercase" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Categorias
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+          <!---->
+          <li class="nav-item">
+            <a class="nav-link mx-2 text-uppercase " (click)="CloseMenu()" [routerLink]="['negocio']" aria-current="page" href="#">Agapi</a>
+          </li>
+          <!---->
+          <li class="nav-item">
+            <a class="nav-link mx-2 text-uppercase" (click)="CloseMenu()" [routerLink]="['agregar-negocio']" href="#">Agregar</a>
+          </li>
+        </ul>
+        <!--
+        <ul class="navbar-nav ms-auto ">
+          <li class="nav-item">
+        <a class="nav-link mx-2 text-uppercase" href="#"><i class="fa fa-shopping-cart me-1 text-black" aria-hidden="true"></i> Cart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-2 text-uppercase" href="#"><i class="fa fa-user me-1"></i> Account</a>
+          </li>
+        </ul>
+      -->
+      </div>
+    </div>
+  </nav>

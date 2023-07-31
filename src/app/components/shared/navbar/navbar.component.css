@@ -1,0 +1,27 @@
+a {
+    font-size: 1em;
+    font-weight: bolder;
+}
+
+nav{
+    border-radius: 0 0 4em 4em;
+}
+    
+.superNav {
+    font-size: 13px;
+}
+
+.form-control {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+@media screen and (max-width:540px) {
+    .centerOnMobile {
+        text-align: center
+    }
+}
+
+.nav-link{
+    color: white;
+}
