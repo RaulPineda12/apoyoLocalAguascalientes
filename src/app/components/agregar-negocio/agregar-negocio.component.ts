@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2'
 
@@ -13,6 +14,7 @@ export class AgregarNegocioComponent implements OnInit {
   //esta variable controlará que el usuario no agregue masde 10 productos
   productosError: string="";
 
+  //mensaje de error cuando se agreguen imagenes
   imagenesError: string="";
 
   //input image
@@ -25,16 +27,32 @@ export class AgregarNegocioComponent implements OnInit {
   //localizacion elegida
   locationChosen = false;
 
+  //dias de la semana
   diasSemana: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  //horarios del negocio
   horarios: { [key: string]: string } = {};
 
-  constructor() { }
+  currentPage = 1;
+  formData: any = {}; // Aquí almacenaremos los datos del formulario
+  totalPages = 5; // Total de páginas en el formulario
+
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
   }
 
-  Agregar() {
+  crear(){
+    Swal.fire({
+      icon: 'success',
+      title: 'Negocio creado',
+      imageHeight: 100,
+      showConfirmButton: false,
+      width: 400,
+      timer: 2000,
+    })
   }
+
 
   //PRODUCTOS Y/O SERVICIOS
   //agregarProducto
@@ -65,9 +83,11 @@ export class AgregarNegocioComponent implements OnInit {
   //IMAGENES
   //agregar Imagen
   agregarImagen() {
+
     //condicion para que el ususario no agregue mas de 10 productos
     if(this.input_imagenes.length<=3){
       this.input_imagenes.push({ imagen: '' });
+    // Realiza la solicitud a la API de oEmbed de Instagram
     }else{
       this.imagenesError="Ya no puedes agregar mas imagenes"
       Swal.fire({
@@ -89,6 +109,7 @@ export class AgregarNegocioComponent implements OnInit {
     this.input_imagenes[index].imagen = event.target.value;
   }
 
+
   //elegir localizacion en maps
   onChoseLocation(event: any){
     this.latitude= event.coords.lat;
@@ -99,12 +120,25 @@ export class AgregarNegocioComponent implements OnInit {
   //obtener horarios
   guardarHorarios() {
     // Aquí puedes manejar la lógica para guardar los horarios en tu base de datos o donde sea necesario
-    alert(this.horarios);
+    console.log(this.horarios);
   }
 
   imprimirImagenes(){
-    alert(this.input_imagenes)
+    console.log(this.input_imagenes)
   }
 
+  
+  goToPage(pageNumber: number) {
+    this.currentPage = pageNumber;
+  }
+  onFormSubmitPage1() {
+    // Aquí puedes manejar los datos del formulario de la página 1
+    console.log('Datos del formulario - Página 1:', this.formData);
+  }
+
+  onFormSubmitPage2() {
+    // Aquí puedes manejar los datos del formulario de la página 2
+    console.log('Datos del formulario - Página 2:', this.formData);
+  }
 }
 

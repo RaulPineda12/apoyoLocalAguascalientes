@@ -8,8 +8,8 @@ body{
     background-color: #DFE3EE;
 }
 
-h1,h2, h4{
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+h1,h2,h3,h4{
+    color: #2F328A;
 }
 
 /*background blue gradient*/
@@ -33,8 +33,6 @@ h1,h2, h4{
 /*color text for headers*/
 .headers-text{
     color: #2F328A;
-    -webkit-text-stroke-width: .5px;
-    -webkit-text-stroke-color: #000000;
 }
 
 /*text shadow for small texts*/
