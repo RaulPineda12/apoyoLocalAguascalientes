@@ -1,143 +1,278 @@
 <br><br>
-<div class="container fadeInAnimation center-content mt-5" style="flex-direction: column;">
+<div class="container fadeInAnimation center-content mt-5 screen-height"
+    style="flex-direction: column;;">
+    <h2 style="font-weight: bolder;" class="mb-4">Formulario</h2>
     <div class="box-shadow-black container form-box form-container" style="background-color: white;">
-
         <div *ngIf="currentPage === 1">
-            <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mb-4">Agregar negocio</h2>
-            <h4 class="headers-text">Datos Generales</h4>
-            <!--nombre del negocio-->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="nombre">Nombre del negocio *</label>
-                <input type="text" id="nombre" class="form-control" />
-            </div>
+            <form [formGroup]="nuevoForm" (ngSubmit)="nuevoSubmitted1()">
+                <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mb-4">Datos Generales
+                </h2>
+                <!--nombre del negocio-->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="nombre">Nombre del negocio *</label>
+                    <input type="text" id="nombre" class="form-control" formControlName="nombre" />
 
-            <!--descripcion-->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="descripcion">Descripcion breve del negocio * <br> <span class="text-muted">(Quienes son y que venden)</span></label>
-                <textarea type="text" id="descripcion"  rows="5" class="form-control"></textarea>
-            </div>
-
-            <!--categoria-->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="categoria">Seleccione la categoria del negocio *</label>
-                <select name="categoria" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                    <option selected>Comida</option>
-                    <option value="1">Joyeria</option>
-                    <option value="2">Tecnologia</option>
-                    <option value="3">Otra</option>
-                </select>              
-            </div>
-
-            <!--CONTACTO-->
-            <h4 class="headers-text">Contacto</h4>
-            <!--numero telefonico-->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="telefono">Número teléfonico *</label>
-                <input type="text" id="telefono" class="form-control" />
-            </div>
-        </div>
-
-        <div *ngIf="currentPage === 2">
-            <!--PRODUCTOS Y/O SERVICIOS-->
-            <h4 class="headers-text">Productos y/o Servicios</h4>
-            <!--Productos y/o servicios-->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="productos">Agregue los productos y/o servicios que ofrece * <br><span class="text-muted">(Máximo 8)</span></label>
-                <br>
-                <div *ngFor="let input of inputList; let i = index" class="center-content">
-                    <div class="input-group mb-3">
-                        <label for="productos" class="center-content me-2">#{{i+1}} </label>
-                        <input type="text" id="productos" name="productos" class="form-control" *ngIf="input" [value]="input.value" (input)="onInputChange($event, i)">
-                        <button class="btn btn-danger" type="button" id="button-addon2" (click)="removerProducto(i)">Eliminar</button>
+                    <!--validaciones-->
+                    <div class="form-text text-danger"
+                        *ngIf="nuevoForm.controls.nombre.hasError('required') && Nombre.touched">
+                        Nombre del negocio requerido
+                    </div>
+                    <div class="form-text text-danger" *ngIf="nuevoForm.controls['nombre'].errors && Nombre.touched">
+                        Debe contar con un mínimo de 5 caracteres y un máximo de 150.
                     </div>
                 </div>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <button class="btn btn-primary mt-1" (click)="agregarProducto()">Agregar</button>
+
+                <!--descripcion-->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="descripcion">Descripcion breve del negocio * <br> <span
+                            class="text-muted">(Quienes son y que venden)</span></label>
+                    <textarea type="text" formControlName="descripcion" id="descripcion" rows="5"
+                        class="form-control"></textarea>
+                    <!--validaciones-->
+                    <div class="form-text text-danger"
+                        *ngIf="nuevoForm.controls.descripcion.hasError('required') && Descripcion.touched">
+                        Descripcion necesaria
+                    </div>
+                    <div class="form-text text-danger"
+                        *ngIf="nuevoForm.controls['descripcion'].errors && Descripcion.touched">
+                        La descripción debe contar con un mínimo de 10 caracteres y un máximo de 500.
+                    </div>
                 </div>
-            </div>
+
+                <!--categoria-->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="categoria">Seleccione la categoria del negocio *</label>
+                    <select name="categoria" formControlName="categoria" class="form-select form-select-lg mb-3"
+                        aria-label=".form-select-lg example">
+                        <option>Comida</option>
+                        <option selected value="Joyeria">Joyeria</option>
+                        <option value="Tecnologia">Tecnologia</option>
+                        <option value="Otra">Otra</option>
+                    </select>
+                    <!--validaciones-->
+                    <div class="form-text text-danger"
+                        *ngIf="nuevoForm.controls.categoria.hasError('required') && Categoria.touched">
+                        Seleccione una categoria
+                    </div>
+                </div>
+                <!--Guardar-->
+                <div class="d-grid gap-2 col-6 mx-auto mt-5">
+                    <button type="submit" [disabled]="nuevoForm.invalid"
+                        class="btn btn-outline-primary mt-2">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="mt-4" *ngIf="currentPage === 2">
+            <!--PRODUCTOS Y/O SERVICIOS-->
+            <form [formGroup]="nuevoForm2" (ngSubmit)="nuevoSubmitted2()">
+                <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Productos y/o
+                    Servicios</h2>
+                <!--Productos y/o servicios-->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="productos">Agregue los productos y/o servicios que ofrece * <br><span
+                            class="text-muted">(Máximo 8)</span></label>
+                    <br>
+                    <div *ngFor="let input of inputList; let i = index" class="center-content">
+                        <div class="input-group mb-3">
+                            <label for="productos" class="center-content me-2">#{{i+1}} </label>
+                            <input type="text" required id="productos" name="productos" class="form-control"
+                                *ngIf="input" formControlName="productosservicios" (input)="onInputChange($event, i)">
+                            <button class="btn btn-danger" type="button" id="button-addon2"
+                                (click)="removerProducto(i)">Eliminar</button>
+                        </div>
+                    </div>
+                    <!--validaciones-->
+                    <p class="form-text text-danger"
+                        *ngIf="nuevoForm2.controls.productosservicios.hasError('required') && ProductosServicios.touched">
+                        Error en un campo
+                    </p>
+                    <!--validaciones-->
+                    <p class="form-text text-danger" *ngIf="this.productosError != '' ">
+                        {{this.productosError}}
+                    </p>
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <a class="btn btn-primary mt-1" (click)="agregarProducto()">Agregar</a>
+                    </div>
+                </div>
+                <!--submitt-->
+                <div class="d-grid gap-2 col-6 mx-auto mt-5">
+                    <button [disabled]="nuevoForm2.invalid" class="btn btn-outline-primary mt-2"
+                        type="submit">Guardar</button>
+                </div>
+            </form>
         </div>
 
         <div *ngIf="currentPage === 3">
-            <!--DIRECCION-->
-            <h4 class="headers-text">Dirección</h4>
-            <!--Calle-->
-            <div class="input-group mb-3">
-                <span class="input-group-text" name="calle">Calle</span>
-                <input type="text" class="form-control">
-            </div>
-            <!--Numero-->
-            <div class="input-group mb-3">
-                <span class="input-group-text" name="numero">Número</span>
-                <input type="text" class="form-control">
-            </div>
-            <!--Interior-->
-            <div class="input-group mb-3">
-                <span class="input-group-text" name="interior">Interior <small class="text-muted">(Opcional)</small></span>
-                <input type="text" class="form-control">
-            </div>
-            <!--Colonia-->
-            <div class="input-group mb-3">
-                <span class="input-group-text" name="colonia">Colonia</span>
-                <input type="text" class="form-control">
-            </div>
-            <!--cp-->
-            <div class="input-group mb-4">
-                <span class="input-group-text" name="cp">Código Postal</span>
-                <input type="number" class="form-control">
-            </div>
-
-            <!--HORARIOS-->
-            <h4 class="headers-text">Horarios *</h4>
-            <span class="text-muted mb-5">(Escriba los horarios que maneja su negocio)</span>
-            <div class="row center-content mb-4" style="border: 1px dashed lightslategrey; border-radius: 5em;">
-                <p class="center-content mt-2" style="color: lightslategrey;">Ejemplo:</p>
-                <div class="col-2 col-sm-2">
-                    <label for="martes" class="col-form-label" style="color: lightslategray;">Martes</label>
-                </div>
-                <div class="col-6 col-sm-6 mb-2">
-                    <input type="text" id="martes" class="form-control" aria-describedby="passwordHelpInline" name="martes" value="10:00am - 6:00pm" disabled>
-                </div>
-            </div>
-            <div class="form-outline mt-2 mb-4">
-                <div *ngFor="let dia of diasSemana" class="mb-1">
-                    <div class="row center-content">
-                        <div class="col-3 col-sm-3">
-                            <label for="{{dia}}" class="col-form-label">{{dia}}</label>
+            <form [formGroup]="nuevoForm3" (ngSubmit)="nuevoSubmitted3()">
+                <!--DIRECCION-->
+                <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Dirección</h2>
+                <!--verificar si cuenta con direccion fisica-->
+                <div class="container mb-3">
+                    <div class="row">
+                        <div class="col">
+                            <p>¿Tu negocio cuenta con una dirección fisíca?</p>
                         </div>
-                        <div class="col-8 col-sm-8">
-                            <input type="text" id="{{dia}}" class="form-control" aria-describedby="passwordHelpInline" [(ngModel)]="horarios[dia]" name="{{ dia }}">
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-check-label me-2" for="flexRadioDefault1">
+                                Sí
+                            </label>
+                            <input class="form-check-input" (click)="verCamposDireccion1()" type="radio"
+                                name="flexRadioDefault" id="flexRadioDefault1">
+                        </div>
+                        <div class="col">
+                            <label class="form-check-label me-2" for="flexRadioDefault1">
+                                No
+                            </label>
+                            <input class="form-check-input" (click)="ocultarCamposDireccion2()" checked type="radio"
+                                name="flexRadioDefault" id="flexRadioDefault1">
                         </div>
                     </div>
                 </div>
-                <div class="center-content mt-2">
-                    <button class="btn btn-primary" (click)="guardarHorarios()">Guardar</button>
+
+                <div *ngIf="this.tieneDireccion">
+                    <!--Calle-->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Calle*</span>
+                        <input type="text" class="form-control" formControlName="calle">
+                        <!--validaciones-->
+                        <div class="container text-danger"
+                            *ngIf="nuevoForm3.controls.calle.hasError('required') && Calle.touched">
+                            <br>
+                            Campo requerido
+                        </div>
+                        <div class="container text-danger" *ngIf="nuevoForm3.controls['calle'].errors && Calle.touched">
+                            Debe contar con un mínimo de 4 caracteres y un máximo de 60.
+                        </div>
+                    </div>
+                    <!--Numero-->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" name="numero">Número*</span>
+                        <input type="text" class="form-control" formControlName="num_calle">
+                        <!--validaciones-->
+                        <div class="container text-danger"
+                            *ngIf="nuevoForm3.controls.num_calle.hasError('required') && Num_Calle.touched">
+                            Campo requerido
+                        </div>
+                        <div class="container text-danger"
+                            *ngIf="nuevoForm3.controls['num_calle'].errors && Num_Calle.touched">
+                            Debe contar con un mínimo de 2 caracteres y un máximo de 8.
+                        </div>
+                    </div>
+                    <!--Interior-->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" name="interior">Interior <small
+                                class="text-muted">(Opcional)</small></span>
+                        <input type="text" class="form-control" formControlName="interior">
+                        <!--validaciones-->
+                        <div class="container text-danger"
+                            *ngIf="nuevoForm3.controls['interior'].errors && Interior.touched">
+                            Debe contar con un mínimo de 1 caracter y un máximo de 4.
+                        </div>
+                    </div>
+                    <!--Colonia-->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" name="colonia">Colonia*</span>
+                        <input type="text" class="form-control" formControlName="colonia">
+                        <!--validaciones-->
+                        <div class="container text-danger"
+                            *ngIf="nuevoForm3.controls.colonia.hasError('required') && Colonia.touched">
+                            Campo requerido
+                        </div>
+                        <div class="container text-danger"
+                            *ngIf="nuevoForm3.controls['colonia'].errors && Colonia.touched">
+                            Debe contar con un mínimo de 4 caracteres y un máximo de 60.
+                        </div>
+                    </div>
+                    <!--cp-->
+                    <div class="input-group mb-4">
+                        <span class="input-group-text" name="cp">Código Postal*</span>
+                        <input type="number" class="form-control" formControlName="cp">
+                        <!--validaciones-->
+                        <div class="container text-danger"
+                            *ngIf="nuevoForm3.controls.cp.hasError('required') && Cp.touched">
+                            Campo requerido
+                        </div>
+                        <div class="container text-danger" *ngIf="nuevoForm3.controls['cp'].errors && Cp.touched">
+                            Formato erroneo
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <!--HORARIOS-->
+                <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Horarios</h2>
+                <span class="text-muted mb-5">(Escriba los horarios que maneja su negocio)</span>
+                <div class="row center-content mt-2 mb-4"
+                    style="border: 1px dashed lightslategrey; border-radius: 5em;">
+                    <p class="center-content mt-2" style="color: lightslategrey;">Ejemplo:</p>
+                    <div class="col-2 col-sm-2">
+                        <label for="martes" class="col-form-label" style="color: lightslategray;">Martes</label>
+                    </div>
+                    <div class="col-6 col-sm-6 mb-2">
+                        <input type="text" id="martes" class="form-control" aria-describedby="passwordHelpInline"
+                            name="martes" value="10:00am - 6:00pm" disabled>
+                    </div>
+                </div>
+                <div class="form-outline mt-2 mb-4">
+                    <div *ngFor="let dia of diasSemana" class="mb-1">
+                        <div class="row center-content">
+                            <div class="col-3 col-sm-3">
+                                <label for="{{ dia }}" class="col-form-label">{{ dia }}</label>
+                            </div>
+                            <div class="col-8 col-sm-8">
+                                <input type="text" id="{{ dia }}" formControlName="{{ dia }}" class="form-control"
+                                    aria-describedby="passwordHelpInline"  name="{{ dia }}">
+
+                                <!-- Validaciones vinculadas a cada FormControl -->
+                                <div class="form-text text-danger"
+                                    *ngIf="nuevoForm3.get(dia)?.errors && nuevoForm3.get(dia)?.touched">
+                                    <p>Horario requerido</p>
+                                </div>
+                                <div class="form-text text-danger" *ngIf="nuevoForm3.get(dia)?.hasError('minlength')">
+                                    Debe contar con un mínimo de 10 caracteres</div>
+                                <div class="form-text text-danger" *ngIf="nuevoForm3.get(dia)?.hasError('maxlength')">
+                                    Debe contar con un máximo de 30 caracteres</div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón de submit -->
+                    <div class="d-grid gap-2 col-6 mx-auto mt-5">
+                        <button [disabled]="nuevoForm3.invalid" class="btn btn-outline-primary mt-2"
+                            type="submit">Guardar</button>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <div *ngIf="currentPage === 4">
             <!--UBICACION EN GOOGLE MAPS-->
-            <h4 class="mb-4">Ubicación en Google Maps</h4>
-            <h5 class="mb-4">Seleccione la ubicación de su negocio en el mapa</h5>
-            <h4 *ngIf="this.locationChosen" class="center-content"><span class="badge rounded-pill bg-success mb-2">Ubicación seleccionada!</span></h4>
+            <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Ubicación en Google
+                Maps</h2>
+            <h5 class="mb-5">Seleccione la ubicación de su negocio en el mapa</h5>
+            <h4 *ngIf="this.locationChosen" class="center-content"><span
+                    class="badge rounded-pill bg-success mb-3">Ubicación seleccionada!</span></h4>
 
             <div id="mapContainer" class="box-shadow-black mb-4">
-                <agm-map
-                [latitude]="this.latitude"
-                [longitude]="longitude"
-                [zoom]="14"
-                [mapTypeControl]="true"
-                [fullscreenControl]="true"
-                [streetViewControl]="true"
-                (mapClick)="onChoseLocation($event)">
+                <agm-map [latitude]="this.latitude" [longitude]="longitude" [zoom]="14" [mapTypeControl]="true"
+                    [fullscreenControl]="true" [streetViewControl]="true" (mapClick)="onChoseLocation($event)">
                     <agm-marker [latitude]="this.latitude" [longitude]="longitude" *ngIf="this.locationChosen">
 
                     </agm-marker>
                 </agm-map>
             </div>
+            <!--Guardar-->
+            <div class="d-grid gap-2 col-6 mx-auto mt-1">
+                <button *ngIf="this.locationChosen" class="btn btn-outline-primary mt-2"
+                    (click)="Guardar4(5)">Guardar</button>
+            </div>
+        </div>
 
+        <div *ngIf="currentPage === 5">
             <!--Redes sociales-->
-            <h4 class="headers-text">Redes Sociales</h4>
+            <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Redes Sociales</h2>
             <p><span class="text-muted mb-5">Agrega los enlaces URL de tus páginas de redes sociales</span></p>
 
             <!--facebook-->
@@ -160,27 +295,35 @@
             <div class="form-outline mb-4">
                 <label class="form-label" for="whatsapp">
                     <i class="fa fa-whatsapp fa-2x" style="color: green;" aria-hidden="true"></i>
-                    Whatsapp <span class="text-muted mb-5">(opcional)</span></label>
+                    Whatsapp o número teléfonico <span class="text-muted mb-5">(opcional)</span></label>
                 <input type="text" id="whatsapp" class="form-control" />
+            </div>
+
+            <!--Guardar-->
+            <div class="d-grid gap-2 col-6 mx-auto mt-1">
+                <button class="btn btn-outline-primary mt-2" (click)="Guardar5(6)">Guardar</button>
             </div>
         </div>
 
         <!--Imagenes-->
-        <div *ngIf="currentPage === 5">
+        <div *ngIf="currentPage === 6">
             <!--Imagenes de los productos-->
-            <h4 class="headers-text">Imagenes</h4>
+            <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Imagenes</h2>
             <div class="form-outline mb-4">
-                <label class="form-label" for="imagenes">Agrega imagenes de los productos y/o servicios que ofreces * <br><span class="text-muted">(Máximo 4)</span></label>
+                <label class="form-label" for="imagenes">Agrega imagenes de los productos y/o servicios que ofreces *
+                    <br><span class="text-muted">(Máximo 4)</span></label>
                 <br>
                 <div *ngFor="let input of input_imagenes; let i = index" class="center-content">
                     <div class="input-group mb-3">
                         <label for="imagenes" class="center-content me-2">#{{i+1}} </label>
-                        <input type="search" id="imagenes" name="imagenes" class="form-control" *ngIf="input" [value]="input.imagen" (input)="onInputImageChange($event, i)">
-                        <button class="btn btn-danger" type="button" id="button-addon2" (click)="removerImagen(i)">Eliminar</button>
+                        <input type="search" id="imagenes" name="imagenes" class="form-control" *ngIf="input"
+                            [value]="input.imagen" (input)="onInputImageChange($event, i)">
+                        <button class="btn btn-danger" type="button" id="button-addon2"
+                            (click)="removerImagen(i)">Eliminar</button>
                     </div>
                 </div>
                 <div class="d-grid gap-2 col-6 mx-auto">
-                    <button class="btn btn-primary mt-1" (click)="agregarImagen()">Agregar</button>
+                    <button class="btn btn-primary mt-1" (click)="agregarImagen()">Agregar Imagen</button>
                 </div>
             </div>
 
@@ -189,13 +332,15 @@
                 <div class="row center-content">
                     <div class="col-6 mb-4" *ngFor="let imagen of input_imagenes; let i = index">
                         <div class="text-center">
-                            <img [src]="imagen.imagen" class="box-shadow-black" width="100%" id="ImageUrlPreview" onerror="this.src='../../../assets/images/noImage.png'" />
+                            <img [src]="imagen.imagen" class="box-shadow-black" width="100%" id="ImageUrlPreview"
+                                onerror="this.src='../../../assets/images/noImage.png'" />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto mt-5">
-                <button *ngIf="this.input_imagenes.length > 0" class="btn btn-success mt-2" (click)="crear()">Agregar Negocio</button>
+                <button *ngIf="this.input_imagenes.length > 0" class="btn btn-success mt-2" (click)="crear()">Agregar
+                    Negocio</button>
             </div>
         </div>
 
@@ -209,20 +354,23 @@
                 <li class="page-item" [class.active]="currentPage === 1">
                     <a class="page-link round" (click)="goToPage(1)">1</a>
                 </li>
-                <li class="page-item" [class.active]="currentPage === 2">
+                <li class="page-item" [class.active]="currentPage === 2" [class.disabled]="!this.guardar1">
                     <a class="page-link round" (click)="goToPage(2)">2</a>
                 </li>
-                <li class="page-item" [class.active]="currentPage === 3">
+                <li class="page-item" [class.active]="currentPage === 3" [class.disabled]="!this.guardar2">
                     <a class="page-link round" (click)="goToPage(3)">3</a>
                 </li>
-                <li class="page-item" [class.active]="currentPage === 4">
+                <li class="page-item" [class.active]="currentPage === 4" [class.disabled]="!this.guardar3">
                     <a class="page-link round" (click)="goToPage(4)">4</a>
                 </li>
-                <li class="page-item" [class.active]="currentPage === 5">
+                <li class="page-item" [class.active]="currentPage === 5" [class.disabled]="!this.guardar4">
                     <a class="page-link round" (click)="goToPage(5)">5</a>
                 </li>
+                <li class="page-item" [class.active]="currentPage === 6" [class.disabled]="!this.guardar5">
+                    <a class="page-link round" (click)="goToPage(6)">6</a>
+                </li>
                 <!-- Agrega más páginas según sea necesario -->
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <li class="page-item" [class.disabled]="currentPage === totalPages || !this.guardar2 || !this.guardar3 || !this.guardar4 || !this.guardar5 || !this.guardar6">
                     <a class="page-link" style="border: 0;" (click)="goToPage(currentPage + 1)">>></a>
                 </li>
             </ul>
@@ -234,13 +382,13 @@
 <!--script para las imagenes-->
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         var output = document.getElementById("ImageUrlPreview")
         output.src = $("#imagen").val();
     })
 
     $("#imagen").on("change", function () {
         var output = document.getElementById("ImageUrlPreview")
-        output.src= $(this).val();
+        output.src = $(this).val();
     })
 </script>

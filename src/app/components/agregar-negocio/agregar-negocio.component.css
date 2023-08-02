@@ -3,6 +3,10 @@
   height: 400px; /* Establece una altura inicial, puedes ajustarla según tus necesidades */
 }
 
+.screen-height{
+  min-height: calc(100vh - 70px)
+}
+
 /* Hace que el mapa dentro del contenedor sea responsivo */
 agm-map {
   width: 100%;

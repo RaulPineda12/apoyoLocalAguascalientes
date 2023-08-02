@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 //google maps
 import { AgmCoreModule } from '@agm/core'; // Importa el módulo AGM
+//reactive forms
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 
 
@@ -30,6 +33,7 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDoUXXJkFY4Yg7BsNC5bkO7Bj5zB--y5PU',
     })
