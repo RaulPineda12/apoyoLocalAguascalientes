@@ -1,8 +1,8 @@
 <br><br>
 <div class="container fadeInAnimation center-content mt-5 screen-height"
     style="flex-direction: column;;">
-    <h2 style="font-weight: bolder;" class="mb-4">Formulario</h2>
     <div class="box-shadow-black container form-box form-container" style="background-color: white;">
+        <!--DATOS GENERALES-->
         <div *ngIf="currentPage === 1">
             <form [formGroup]="nuevoForm" (ngSubmit)="nuevoSubmitted1()">
                 <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mb-4">Datos Generales
@@ -15,10 +15,13 @@
                     <!--validaciones-->
                     <div class="form-text text-danger"
                         *ngIf="nuevoForm.controls.nombre.hasError('required') && Nombre.touched">
-                        Nombre del negocio requerido
+                        Campo requerido
                     </div>
-                    <div class="form-text text-danger" *ngIf="nuevoForm.controls['nombre'].errors && Nombre.touched">
-                        Debe contar con un mínimo de 5 caracteres y un máximo de 150.
+                    <div class="form-text text-danger" *ngIf="nuevoForm.get('nombre')?.hasError('minlength') || nuevoForm.get('nombre')?.hasError('maxlength')  && Nombre.touched">
+                        Debe contar con un mínimo de 3 caracteres y un máximo de 100.
+                    </div>
+                    <div class="form-text text-danger" *ngIf="nuevoForm.get('nombre')?.hasError('noWhitespace') && nuevoForm.get('nombre')?.touched">
+                        Usted dejo algún espacio en blanco no permitido <br> <small class="text-danger"> (al inicio o final de su texto)</small>
                     </div>
                 </div>
 
@@ -31,11 +34,13 @@
                     <!--validaciones-->
                     <div class="form-text text-danger"
                         *ngIf="nuevoForm.controls.descripcion.hasError('required') && Descripcion.touched">
-                        Descripcion necesaria
+                        Campo requerido
                     </div>
-                    <div class="form-text text-danger"
-                        *ngIf="nuevoForm.controls['descripcion'].errors && Descripcion.touched">
-                        La descripción debe contar con un mínimo de 10 caracteres y un máximo de 500.
+                    <div class="form-text text-danger" *ngIf="nuevoForm.get('descripcion')?.hasError('minlength') || nuevoForm.get('descripcion')?.hasError('maxlength')  && Descripcion.touched">
+                        Debe contar con un mínimo de 10 caracteres y un máximo de 500.
+                    </div>
+                    <div class="form-text text-danger" *ngIf="nuevoForm.get('descripcion')?.hasError('noWhitespace') && nuevoForm.get('descripcion')?.touched">
+                        Usted dejo algún espacio en blanco no permitido <br> <small class="text-danger"> (al inicio o final de su texto)</small>
                     </div>
                 </div>
 
@@ -56,15 +61,14 @@
                     </div>
                 </div>
                 <!--Guardar-->
-                <div class="d-grid gap-2 col-6 mx-auto mt-5">
+                <div class="d-grid gap-2 col-6 mx-auto">
                     <button type="submit" [disabled]="nuevoForm.invalid"
-                        class="btn btn-outline-primary mt-2">Guardar</button>
+                        class="btn btn-outline-primary">Siguiente</button>
                 </div>
             </form>
         </div>
-
+        <!--PRODUCTOS Y/O SERVICIOS-->
         <div class="mt-4" *ngIf="currentPage === 2">
-            <!--PRODUCTOS Y/O SERVICIOS-->
             <form [formGroup]="nuevoForm2" (ngSubmit)="nuevoSubmitted2()">
                 <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Productos y/o
                     Servicios</h2>
@@ -96,16 +100,15 @@
                     </div>
                 </div>
                 <!--submitt-->
-                <div class="d-grid gap-2 col-6 mx-auto mt-5">
-                    <button [disabled]="nuevoForm2.invalid" class="btn btn-outline-primary mt-2"
-                        type="submit">Guardar</button>
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <button [disabled]="nuevoForm2.invalid" class="btn btn-outline-primary"
+                        type="submit">Siguiente</button>
                 </div>
             </form>
         </div>
-
+        <!--DIRECCION Y HORARIOS-->
         <div *ngIf="currentPage === 3">
             <form [formGroup]="nuevoForm3" (ngSubmit)="nuevoSubmitted3()">
-                <!--DIRECCION-->
                 <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Dirección</h2>
                 <!--verificar si cuenta con direccion fisica-->
                 <div class="container mb-3">
@@ -119,14 +122,14 @@
                             <label class="form-check-label me-2" for="flexRadioDefault1">
                                 Sí
                             </label>
-                            <input class="form-check-input" (click)="verCamposDireccion1()" type="radio"
+                            <input class="form-check-input" [checked]="this.tieneDireccion == true" (click)="verCamposDireccion1()" type="radio"
                                 name="flexRadioDefault" id="flexRadioDefault1">
                         </div>
                         <div class="col">
                             <label class="form-check-label me-2" for="flexRadioDefault1">
                                 No
                             </label>
-                            <input class="form-check-input" (click)="ocultarCamposDireccion2()" checked type="radio"
+                            <input class="form-check-input" (click)="ocultarCamposDireccion2()" [checked]="this.tieneDireccion == false" type="radio"
                                 name="flexRadioDefault" id="flexRadioDefault1">
                         </div>
                     </div>
@@ -139,12 +142,14 @@
                         <input type="text" class="form-control" formControlName="calle">
                         <!--validaciones-->
                         <div class="container text-danger"
-                            *ngIf="nuevoForm3.controls.calle.hasError('required') && Calle.touched">
-                            <br>
+                            *ngIf="nuevoForm3.controls.calle.hasError('required')">
                             Campo requerido
                         </div>
-                        <div class="container text-danger" *ngIf="nuevoForm3.controls['calle'].errors && Calle.touched">
-                            Debe contar con un mínimo de 4 caracteres y un máximo de 60.
+                        <div class="container form-text text-danger" *ngIf="nuevoForm3.get('calle')?.hasError('minlength') || nuevoForm3.get('calle')?.hasError('maxlength')  && Calle.touched">
+                            Debe contar con un mínimo de 2 caracteres y un máximo de 60.
+                        </div>
+                        <div class="container form-text text-danger" *ngIf="nuevoForm3.get('calle')?.hasError('noWhitespace') && nuevoForm3.get('calle')?.touched">
+                            Usted dejo algún espacio en blanco no permitido <br> <small class="text-danger"> (al inicio o final de su texto)</small>
                         </div>
                     </div>
                     <!--Numero-->
@@ -153,12 +158,14 @@
                         <input type="text" class="form-control" formControlName="num_calle">
                         <!--validaciones-->
                         <div class="container text-danger"
-                            *ngIf="nuevoForm3.controls.num_calle.hasError('required') && Num_Calle.touched">
+                            *ngIf="nuevoForm3.controls.num_calle.hasError('required')">
                             Campo requerido
                         </div>
-                        <div class="container text-danger"
-                            *ngIf="nuevoForm3.controls['num_calle'].errors && Num_Calle.touched">
-                            Debe contar con un mínimo de 2 caracteres y un máximo de 8.
+                        <div class="container form-text text-danger" *ngIf="nuevoForm3.get('num_calle')?.hasError('minlength') || nuevoForm3.get('num_calle')?.hasError('maxlength')  && Num_Calle.touched">
+                            Debe contar con un mínimo de 1 caracter y un máximo de 8.
+                        </div>
+                        <div class="container form-text text-danger" *ngIf="nuevoForm3.get('num_calle')?.hasError('noWhitespace') && nuevoForm3.get('num_calle')?.touched">
+                            Usted dejo algún espacio en blanco no permitido <br> <small class="text-danger"> (al inicio o final de su texto)</small>
                         </div>
                     </div>
                     <!--Interior-->
@@ -166,10 +173,13 @@
                         <span class="input-group-text" name="interior">Interior <small
                                 class="text-muted">(Opcional)</small></span>
                         <input type="text" class="form-control" formControlName="interior">
+                        
                         <!--validaciones-->
-                        <div class="container text-danger"
-                            *ngIf="nuevoForm3.controls['interior'].errors && Interior.touched">
-                            Debe contar con un mínimo de 1 caracter y un máximo de 4.
+                        <div class="container form-text text-danger" *ngIf="nuevoForm3.get('interior')?.hasError('minlength') || nuevoForm3.get('interior')?.hasError('maxlength')  && Interior.touched">
+                            Debe contar con un mínimo de 1 caracter y un máximo de 5.
+                        </div>
+                        <div class="container form-text text-danger" *ngIf="nuevoForm3.get('interior')?.hasError('noWhitespace') && nuevoForm3.get('interior')?.touched">
+                            Usted dejo algún espacio en blanco no permitido <br> <small class="text-danger"> (al inicio o final de su texto)</small>
                         </div>
                     </div>
                     <!--Colonia-->
@@ -178,12 +188,14 @@
                         <input type="text" class="form-control" formControlName="colonia">
                         <!--validaciones-->
                         <div class="container text-danger"
-                            *ngIf="nuevoForm3.controls.colonia.hasError('required') && Colonia.touched">
+                            *ngIf="nuevoForm3.controls.colonia.hasError('required')">
                             Campo requerido
                         </div>
-                        <div class="container text-danger"
-                            *ngIf="nuevoForm3.controls['colonia'].errors && Colonia.touched">
-                            Debe contar con un mínimo de 4 caracteres y un máximo de 60.
+                        <div class="container form-text text-danger" *ngIf="nuevoForm3.get('colonia')?.hasError('minlength') || nuevoForm3.get('colonia')?.hasError('maxlength')  && Colonia.touched">
+                            Debe contar con un mínimo de 3 caracteres y un máximo de 60.
+                        </div>
+                        <div class="container form-text text-danger" *ngIf="nuevoForm3.get('colonia')?.hasError('noWhitespace') && nuevoForm3.get('colonia')?.touched">
+                            Usted dejo algún espacio en blanco no permitido <br> <small class="text-danger"> (al inicio o final de su texto)</small>
                         </div>
                     </div>
                     <!--cp-->
@@ -192,11 +204,11 @@
                         <input type="number" class="form-control" formControlName="cp">
                         <!--validaciones-->
                         <div class="container text-danger"
-                            *ngIf="nuevoForm3.controls.cp.hasError('required') && Cp.touched">
+                            *ngIf="nuevoForm3.controls.cp.hasError('required')">
                             Campo requerido
                         </div>
-                        <div class="container text-danger" *ngIf="nuevoForm3.controls['cp'].errors && Cp.touched">
-                            Formato erroneo
+                        <div class="container text-danger" *ngIf="nuevoForm3.get('cp')?.hasError('pattern')  && Cp.touched">
+                            Formato érroneo
                         </div>
                     </div>
                 </div>
@@ -204,14 +216,25 @@
                 <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Horarios</h2>
                 <span class="text-muted mb-5">(Escriba los horarios que maneja su negocio)</span>
                 <div class="row center-content mt-2 mb-4"
-                    style="border: 1px dashed lightslategrey; border-radius: 5em;">
-                    <p class="center-content mt-2" style="color: lightslategrey;">Ejemplo:</p>
+                    style="border: 1px dashed lightslategrey; border-radius: 3em;">
+                    <p class="center-content mt-2" style="color: lightslategrey;">Ejemplos:</p>
+                    
                     <div class="col-2 col-sm-2">
                         <label for="martes" class="col-form-label" style="color: lightslategray;">Martes</label>
                     </div>
                     <div class="col-6 col-sm-6 mb-2">
                         <input type="text" id="martes" class="form-control" aria-describedby="passwordHelpInline"
                             name="martes" value="10:00am - 6:00pm" disabled>
+                    </div>
+
+                    <div class="row center-content">
+                        <div class="col-2 col-sm-2">
+                            <label for="domingo" class="col-form-label" style="color: lightslategray;">Domingo</label>
+                        </div>
+                        <div class="col-6 col-sm-6 mb-2">
+                            <input type="text" id="domingo" class="form-control" aria-describedby="passwordHelpInline"
+                                name="domingo" value="Cerrado" disabled>
+                        </div>
                     </div>
                 </div>
                 <div class="form-outline mt-2 mb-4">
@@ -224,126 +247,168 @@
                                 <input type="text" id="{{ dia }}" formControlName="{{ dia }}" class="form-control"
                                     aria-describedby="passwordHelpInline"  name="{{ dia }}">
 
-                                <!-- Validaciones vinculadas a cada FormControl -->
+                                <!-- Validaciones-->
                                 <div class="form-text text-danger"
-                                    *ngIf="nuevoForm3.get(dia)?.errors && nuevoForm3.get(dia)?.touched">
+                                    *ngIf="nuevoForm3.get(dia)?.hasError('required') && nuevoForm3.get(dia)?.touched">
                                     <p>Horario requerido</p>
                                 </div>
                                 <div class="form-text text-danger" *ngIf="nuevoForm3.get(dia)?.hasError('minlength')">
-                                    Debe contar con un mínimo de 10 caracteres</div>
+                                    Debe contar con un mínimo de 6 caracteres
+                                </div>
                                 <div class="form-text text-danger" *ngIf="nuevoForm3.get(dia)?.hasError('maxlength')">
-                                    Debe contar con un máximo de 30 caracteres</div>
-
+                                    Debe contar con un máximo de 50 caracteres
+                                </div>
+                                <div class="form-text text-danger" *ngIf="nuevoForm3.get(dia)?.hasError('noWhitespace') && nuevoForm3.get(dia)?.touched">
+                                    Usted dejo algún espacio en blanco no permitido <br> <small class="text-danger"> (al inicio o final de su texto)</small>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Botón de submit -->
-                    <div class="d-grid gap-2 col-6 mx-auto mt-5">
-                        <button [disabled]="nuevoForm3.invalid" class="btn btn-outline-primary mt-2"
-                            type="submit">Guardar</button>
+                    <div class="d-grid gap-2 col-6 mx-auto mt-4">
+                        <button [disabled]="nuevoForm3.invalid" class="btn btn-outline-primary"
+                            type="submit">Siguiente</button>
                     </div>
                 </div>
             </form>
         </div>
 
+        <!--UBICACION EN GOOGLE MAPS-->
         <div *ngIf="currentPage === 4">
-            <!--UBICACION EN GOOGLE MAPS-->
-            <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Ubicación en Google
+            <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-2">Ubicación en Google
                 Maps</h2>
-            <h5 class="mb-5">Seleccione la ubicación de su negocio en el mapa</h5>
+            <h5 class="mb-2">Seleccione la ubicación de su negocio en el mapa</h5>
+            <br>
             <h4 *ngIf="this.locationChosen" class="center-content"><span
                     class="badge rounded-pill bg-success mb-3">Ubicación seleccionada!</span></h4>
-
-            <div id="mapContainer" class="box-shadow-black mb-4">
-                <agm-map [latitude]="this.latitude" [longitude]="longitude" [zoom]="14" [mapTypeControl]="true"
-                    [fullscreenControl]="true" [streetViewControl]="true" (mapClick)="onChoseLocation($event)">
-                    <agm-marker [latitude]="this.latitude" [longitude]="longitude" *ngIf="this.locationChosen">
-
-                    </agm-marker>
+            <div class="search-container">
+                <input #search placeholder="Buscar lugar" type="text">
+                </div>
+                <div id="mapContainer" class="box-shadow-black mb-4">
+                <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="14" [mapTypeControl]="true"
+                            [fullscreenControl]="true" [streetViewControl]="true" (mapClick)="onChoseLocation($event)">
+                    <agm-marker [latitude]="latitude" [longitude]="longitude" *ngIf="locationChosen"></agm-marker>
                 </agm-map>
-            </div>
+                </div>
             <!--Guardar-->
-            <div class="d-grid gap-2 col-6 mx-auto mt-1">
-                <button *ngIf="this.locationChosen" class="btn btn-outline-primary mt-2"
-                    (click)="Guardar4(5)">Guardar</button>
+            <div class="d-grid gap-2 col-6 mx-auto mt-5">
+                <button [disabled]="!this.locationChosen" class="btn btn-outline-primary"
+                    (click)="GuardarUbicacion()">Siguiente</button>
             </div>
         </div>
 
+        <!--Redes sociales-->
         <div *ngIf="currentPage === 5">
-            <!--Redes sociales-->
-            <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Redes Sociales</h2>
-            <p><span class="text-muted mb-5">Agrega los enlaces URL de tus páginas de redes sociales</span></p>
+            <form [formGroup]="nuevoForm4" (ngSubmit)="nuevoSubmitted4()">
+                <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Redes Sociales</h2>
+                <p><span class="text-muted mb-5">Agrega los enlaces URL de tus páginas de redes sociales</span></p>
 
-            <!--facebook-->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="facebook">
-                    <i class="fa fa-facebook-square fa-2x" style="color: blue;" aria-hidden="true"></i>
-                    Página de Facebook <span class="text-muted mb-5">(opcional)</span></label>
-                <input type="search" id="facebook" class="form-control" />
-            </div>
-
-            <!--instagram-->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="instagram">
-                    <i class="fa fa-instagram fa-2x" style="color: #C31EF4;" aria-hidden="true"></i>
-                    Página de Instagram <span class="text-muted mb-5">(opcional)</span></label>
-                <input type="search" id="instagram" class="form-control" />
-            </div>
-
-            <!--Whatsapp-->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="whatsapp">
-                    <i class="fa fa-whatsapp fa-2x" style="color: green;" aria-hidden="true"></i>
-                    Whatsapp o número teléfonico <span class="text-muted mb-5">(opcional)</span></label>
-                <input type="text" id="whatsapp" class="form-control" />
-            </div>
-
-            <!--Guardar-->
-            <div class="d-grid gap-2 col-6 mx-auto mt-1">
-                <button class="btn btn-outline-primary mt-2" (click)="Guardar5(6)">Guardar</button>
-            </div>
-        </div>
-
-        <!--Imagenes-->
-        <div *ngIf="currentPage === 6">
-            <!--Imagenes de los productos-->
-            <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Imagenes</h2>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="imagenes">Agrega imagenes de los productos y/o servicios que ofreces *
-                    <br><span class="text-muted">(Máximo 4)</span></label>
-                <br>
-                <div *ngFor="let input of input_imagenes; let i = index" class="center-content">
-                    <div class="input-group mb-3">
-                        <label for="imagenes" class="center-content me-2">#{{i+1}} </label>
-                        <input type="search" id="imagenes" name="imagenes" class="form-control" *ngIf="input"
-                            [value]="input.imagen" (input)="onInputImageChange($event, i)">
-                        <button class="btn btn-danger" type="button" id="button-addon2"
-                            (click)="removerImagen(i)">Eliminar</button>
+                <!--facebook-->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="facebook">
+                        <i class="fa fa-facebook-square fa-2x" style="color: blue;" aria-hidden="true"></i>
+                        Página de Facebook <span class="text-muted mb-5">(opcional)</span>
+                        <i *ngIf="!nuevoForm4.get('facebook')?.hasError('pattern') && Facebook.touched && nuevoForm4.get('facebook')?.value !='' " class="fa fa-check fa-lg ms-3 text-success" aria-hidden="true"></i>
+                        <i *ngIf="nuevoForm4.get('facebook')?.hasError('pattern') && Facebook.touched && nuevoForm4.get('facebook')?.value !='' " class="fa fa-times fa-lg ms-3 text-danger" aria-hidden="true"></i>
+                    </label>
+                    <input type="search" id="facebook" class="form-control" formControlName="facebook"/>
+                    <!--validaciones-->
+                    <div class="text-danger" *ngIf="nuevoForm4.get('facebook')?.hasError('pattern')  && Facebook.touched">
+                        Formato érroneo
                     </div>
                 </div>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <button class="btn btn-primary mt-1" (click)="agregarImagen()">Agregar Imagen</button>
-                </div>
-            </div>
 
-            <!--image preview-->
-            <div class="container">
-                <div class="row center-content">
-                    <div class="col-6 mb-4" *ngFor="let imagen of input_imagenes; let i = index">
-                        <div class="text-center">
-                            <img [src]="imagen.imagen" class="box-shadow-black" width="100%" id="ImageUrlPreview"
-                                onerror="this.src='../../../assets/images/noImage.png'" />
+                <!--instagram-->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="instagram">
+                        <i class="fa fa-instagram fa-2x" style="color: #C31EF4;" aria-hidden="true"></i>
+                        Página de Instagram <span class="text-muted mb-5">(opcional)</span>
+                        <i *ngIf="!nuevoForm4.get('instagram')?.hasError('pattern') && Instagram.touched && nuevoForm4.get('instagram')?.value !='' " class="fa fa-check fa-lg ms-3 text-success" aria-hidden="true"></i>
+                        <i *ngIf="nuevoForm4.get('instagram')?.hasError('pattern') && Instagram.touched && nuevoForm4.get('instagram')?.value !='' " class="fa fa-times fa-lg ms-3 text-danger" aria-hidden="true"></i>
+                    </label>
+                    <input type="search" id="instagram" class="form-control" formControlName="instagram" />
+                    <!--validaciones-->
+                    <div class="text-danger" *ngIf="nuevoForm4.get('instagram')?.hasError('pattern')  && Instagram.touched">
+                        Formato érroneo
+                    </div>
+                </div>
+
+                <!--Whatsapp-->
+                <div class="form-outline mb-2">
+                    <label class="form-label" for="whatsapp">
+                        <i class="fa fa-whatsapp fa-2x" style="color: green;" aria-hidden="true"></i>
+                        Whatsapp o número teléfonico <span class="text-muted mb-5">(opcional)</span>
+                        <i *ngIf="!nuevoForm4.get('whatsapp')?.hasError('pattern') && Whatsapp.touched && nuevoForm4.get('whatsapp')?.value !='' " class="fa fa-check fa-lg ms-3 text-success" aria-hidden="true"></i>
+                        <i *ngIf="nuevoForm4.get('whatsapp')?.hasError('pattern') && Whatsapp.touched && nuevoForm4.get('whatsapp')?.value !='' " class="fa fa-times fa-lg ms-3 text-danger" aria-hidden="true"></i>
+                    </label>
+                    <p class="text-muted">Ejemplos: 4498887766 ó +524921112233</p>
+                    <input type="text" id="whatsapp" class="form-control" formControlName="whatsapp" (keydown)="preventSpace($event)"/>
+                    <!--validaciones-->
+                    <div class="text-danger" *ngIf="nuevoForm4.get('whatsapp')?.hasError('pattern')  && Whatsapp.touched">
+                        Formato érroneo
+                    </div>
+                </div>
+                <!-- Botón de submit -->
+                <div class="d-grid gap-2 col-6 mx-auto mt-3">
+                    <button [disabled]="nuevoForm4.invalid" class="btn btn-outline-primary mt-2"
+                        type="submit">Siguiente</button>
+                </div>
+            </form>
+        </div>
+
+        <!--Imagenes DE PRODUCTOS-->
+        <div *ngIf="currentPage === 6">
+            <!--Imagenes de los productos-->
+            <form [formGroup]="nuevoForm5" (ngSubmit)="nuevoSubmitted5()">
+                <h2 style="display: flex; justify-content: center; font-weight: bolder;" class="mt-4">Imagenes</h2>
+                
+                <!-- ... tu código existente ... -->
+                <div *ngFor="let imagenFormGroup of input_imagenes; let i = index" class="center-content">
+                    <div class="input-group mb-3">
+                        <label for="imagenes" class="center-content me-2">#{{ i + 1 }} </label>
+                        <input type="search" id="imagenes" name="imagenes" class="form-control" *ngIf="imagenFormGroup.get('url')"
+                            [formControl]="imagenFormGroup.get('url')" (input)="onInputChange2($event, i)">
+                        <button class="btn btn-danger" style="  border-radius: 0 1em 1em 0;" type="button" id="button-addon2" (click)="removerImagen(i)">Eliminar
+                        </button>
+                        <!-- Validaciones -->
+                        <div class="container" *ngIf="imagenFormGroup.get('url')?.hasError('pattern')">
+                            <p class="text-danger">URL no válida</p>
+                        </div>
+                        <div class="container" *ngIf="imagenFormGroup.get('url')?.hasError('required')">
+                            <p class="text-danger">Campo requerido</p>
+                        </div>
+                        <!--iconos de validaciones-->
+                        <div class="container">
+                            <i *ngIf="!imagenFormGroup.get('url')?.hasError('pattern') && !imagenFormGroup.get('url')?.hasError('required')" class="fa fa-check fa-lg ms-3 text-success" aria-hidden="true"></i>
+                            <i *ngIf="imagenFormGroup.get('url')?.hasError('pattern') || imagenFormGroup.get('url')?.hasError('required')" class="fa fa-times fa-lg ms-3 text-danger" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="d-grid gap-2 col-6 mx-auto mt-5">
-                <button *ngIf="this.input_imagenes.length > 0" class="btn btn-success mt-2" (click)="crear()">Agregar
-                    Negocio</button>
-            </div>
-        </div>
+                <div class="d-grid gap-2 col-6 mx-auto mb-4">
+                    <button class="btn btn-primary" type="button" (click)="agregarImagen()">Agregar Imagen</button>
+                </div>
+                <!-- ... tu código existente ... -->
 
+                <!--image preview-->
+                <div class="container">
+                    <div class="row center-content">
+                        <div class="col-6 mb-4" *ngFor="let imagen of input_imagenes; let i = index">
+                            <div class="text-center">
+                                <img [src]="imagen.imagen" class="box-shadow-black" width="100%" id="ImageUrlPreview"
+                                    onerror="this.src='../../../assets/images/noImage.png'" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Botón de submit -->
+                <div class="d-grid gap-2 col-6 mx-auto mt-2">
+                    <p *ngIf="nuevoForm5.invalid || nuevoForm4.invalid || nuevoForm3.invalid || nuevoForm2.invalid || nuevoForm.invalid" class="text-danger text-center">Error en alguno de los formularios. Favor de verificar</p>
+                    <button [disabled]="nuevoForm5.invalid || nuevoForm4.invalid || nuevoForm3.invalid || nuevoForm2.invalid || nuevoForm.invalid" class="btn btn-outline-success mt-1"
+                        type="submit">CREAR</button>
+                </div>
+            </form>
+        </div>
 
         <!-- Paginación simple -->
         <div class="mt-5 center-content">
@@ -370,7 +435,7 @@
                     <a class="page-link round" (click)="goToPage(6)">6</a>
                 </li>
                 <!-- Agrega más páginas según sea necesario -->
-                <li class="page-item" [class.disabled]="currentPage === totalPages || !this.guardar2 || !this.guardar3 || !this.guardar4 || !this.guardar5 || !this.guardar6">
+                <li class="page-item" [class.disabled]="currentPage === totalPages || !this.guardar1 || !this.guardar2 || !this.guardar3 || !this.guardar4 || !this.guardar5">
                     <a class="page-link" style="border: 0;" (click)="goToPage(currentPage + 1)">>></a>
                 </li>
             </ul>
@@ -379,8 +444,7 @@
 </div>
 
 
-<!--script para las imagenes-->
-
+<!--script para visualizar en tiempo real imagenes-->
 <script>
     $(document).ready(function () {
         var output = document.getElementById("ImageUrlPreview")

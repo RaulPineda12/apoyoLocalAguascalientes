@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, PatternValidator, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import Swal from 'sweetalert2'
 
@@ -16,9 +16,11 @@ export class AgregarNegocioComponent implements OnInit {
   //esta variable controlará que el usuario no agregue masde 10 productos
   productosError: string="";
   //mensaje de error cuando se agreguen imagenes
-  imagenesError: string="";  
+  imagenesError: string="";
+  //mensaje de error cuando se cargue incorrectamente una imagen
+  imagenError: string=""
   //input image
-  input_imagenes:{imagen: string}[]=[];
+  input_imagenes: any[] = [];
   //latitude
   latitude: number=21.88186547214265;
   //longitude
@@ -26,7 +28,7 @@ export class AgregarNegocioComponent implements OnInit {
   //localizacion elegida
   locationChosen = false;
   //dias de la semana
-  diasSemana: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  diasSemana: string[] = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'];  
   //horarios del negocio
   horarios: { [key: string]: FormControl } = {};
   //pagina inicial de la paginación
@@ -34,15 +36,19 @@ export class AgregarNegocioComponent implements OnInit {
   formData: any = {}; // Aquí almacenaremos los datos del formulario
   totalPages = 6; // Total de páginas en el formulario
 
+  //Expresiones regulares
   //url regex expression
   urlRegex =/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
   //phone number regex
   phoneRegex=/^\+?[1-9]\d{1,14}$/
   //cp Regex
   cpRegex=/^\d{5}(?:[-\s]\d{4})?$/
+  //regex para url de instagram
+  instagramUrlRegex = /^(https?:\/\/)?(?:www\.)?instagram\.com\/.*/;
+  //regex para url de facebook
+  facebookUrlRegex = /^(https?:\/\/)?(?:www\.)?facebook\.com\/.*/;
 
-
-  //variables para guardar informacion
+  //variables para la paginacion
   guardar1: boolean=false;
   guardar2: boolean=false;
   guardar3: boolean=false;
@@ -55,29 +61,35 @@ export class AgregarNegocioComponent implements OnInit {
 
 
   //formulario reactivo
-  //datos generales formulario
+  //DATOS GENERALES formulario
   nuevoForm = new FormGroup({
-    nombre: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(150)]),
+    nombre: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.noWhitespaceValidator()]),
     categoria: new FormControl('', [Validators.required]),
-    descripcion: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]),
+    descripcion: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(500), this.noWhitespaceValidator]),
   });
 
-  //productos y/o servicios fomrulario
+  //PRODUCTOS Y/O SERVICIOS fomrulario
   nuevoForm2 = new FormGroup({
     productosservicios: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(60)]),
   })
 
+  //DIRECCION Y HORARIOS formulario
   nuevoForm3:FormGroup;
 
+  //REDES SOCIALES Formulario
   nuevoForm4= new FormGroup({
-    img_logo: new FormControl('', [Validators.required, Validators.pattern(this.urlRegex)]),
-    imagenes: new FormControl('', [Validators.required, Validators.pattern(this.urlRegex)]),
-    facebook: new FormControl('', [Validators.pattern(this.urlRegex)]),
-    instagram: new FormControl('', [Validators.pattern(this.urlRegex)]),
+    facebook: new FormControl('', [Validators.pattern(this.facebookUrlRegex)]),
+    instagram: new FormControl('', [Validators.pattern(this.instagramUrlRegex)]),
     whatsapp: new FormControl('', [Validators.pattern(this.phoneRegex)]),
-  })
+  });
 
+  //IMAGENES DE PRODUCTOS Y/O SERVICIOS formulario
+  nuevoForm5: FormGroup
+
+
+  /*CONSTRUCTOR*/
   constructor(private http: HttpClient, private formBuilder: FormBuilder) {
+    
     //crear formulario 3
     this.nuevoForm3=this.formBuilder.group({
       calle: new FormControl(''),
@@ -85,20 +97,27 @@ export class AgregarNegocioComponent implements OnInit {
       colonia: new FormControl(''),
       interior: new FormControl(''),
       cp: new FormControl(''),
-      horario: new FormControl(''),
+      horarios: new FormControl(''),
     });
 
+    //formulario Imagenes
+    this.nuevoForm5 = this.formBuilder.group({
+      // Puedes dejar esto vacío ya que los formGroups individuales se agregarán dinámicamente
+    });
 
-      // Crear un FormControl para cada día y agregarlos al FormGroup
-      this.diasSemana.forEach(dia => {
-        this.horarios[dia] = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(30)]);
-        this.nuevoForm3.addControl(dia, this.horarios[dia]);
-      });
+    // Crear un FormControl para cada día y agregarlos al FormGroup
+    this.diasSemana.forEach(dia => {
+      this.horarios[dia] = new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(50), this.noWhitespaceValidator()]);
+      this.nuevoForm3.addControl(dia, this.horarios[dia]);
+    });
   }
 
+  /*NG ONINIT()*/
   ngOnInit(): void {
+    this.agregarImagen();
   }
 
+  /*------------------------------------FUNCIONES--------------------------------------------*/
   crear(){
     Swal.fire({
       icon: 'success',
@@ -110,8 +129,36 @@ export class AgregarNegocioComponent implements OnInit {
     })
   }
 
+  scrollToCenter() {
+    window.scrollTo({
+      top: window.innerHeight / 20,
+      left: window.innerWidth / 20,
+      behavior: 'smooth'
+    });
+  }
 
-  //PRODUCTOS Y/O SERVICIOS
+  //funcion para evitar espacios en blanco no deseables
+  noWhitespaceValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value;
+      if (value && value.trim().length === 0) {
+        return { 'noWhitespace': true };
+      } else if (value && value !== value.trim()) {
+        return { 'noWhitespace': true };
+      } else {
+        return null;
+      }
+    }
+  }
+
+  //prevenir espacios en blanco
+  preventSpace(event: KeyboardEvent) {
+    if (event.key === ' ') {
+      event.preventDefault();
+    }
+  }
+
+  //PRODUCTOS Y/O SERVICIOS ---------------
   //agregarProducto
   agregarProducto() {
     //condicion para que el ususario no agregue mas de 10 productos
@@ -131,95 +178,84 @@ export class AgregarNegocioComponent implements OnInit {
   removerProducto(index: number) {
     this.inputList.splice(index, 1);
   }
-
   //productos
   onInputChange(event: any, index: number) {
     this.inputList[index].value = event.target.value;
   }
 
-  //IMAGENES
+  //UBICACION GOOGLE MAPS--------------------
+  //elegir localizacion en maps
+  onChoseLocation(event: any){
+    this.latitude= event.coords.lat;
+    this.longitude= event.coords.lng;
+    this.locationChosen=true;
+  }
+
+  //guardar ubicacion
+  GuardarUbicacion(){
+    this.guardar4=true;
+    //console.log(this.latitude)
+    //console.log(this.longitude)
+    this.goToPage(5)
+  }
+
+  //IMAGENES DE PRODUCTOS --------------------
   //agregar Imagen
-  agregarImagen() {
-    //condicion para que el ususario no agregue mas de 10 productos
-    if(this.input_imagenes.length<=3){
-      this.input_imagenes.push({ imagen: '' });
-    // Realiza la solicitud a la API de oEmbed de Instagram
+  agregarImagen(): void {
+    if(this.input_imagenes.length <=9){
+      //creamos el nuevo input con sus validaciones
+      const imagenFormGroup = this.formBuilder.group({
+        url: ['',[Validators.required, Validators.pattern(this.urlRegex)]] // Puedes agregar otras validaciones aquí
+      });
+
+      //agregamos el nuevo input
+      this.input_imagenes.push(imagenFormGroup);
+      this.nuevoForm5.addControl(`imagen_${this.input_imagenes.length}`, imagenFormGroup);
     }else{
-      this.imagenesError="Limite alcanzado!"
       Swal.fire({
         icon: 'error',
-        title: this.imagenesError,
+        title: "Limite de imagenes alcanzado",
         imageHeight: 100,
       })
     }
   }
 
-  //remover imagen
-  removerImagen(index: number) {
+  removerImagen(index: number): void {
     this.input_imagenes.splice(index, 1);
-  }
-  
-  //imagenes
-  onInputImageChange(event: any, index: number) {
-    this.input_imagenes[index].imagen = event.target.value;
+    this.nuevoForm5.removeControl(`imagen_${index + 1}`);
   }
 
-  //elegir localizacion en maps
-  onChoseLocation(event: any){
-    this.latitude= event.coords.lat;
-    this.longitude=event.coords.lng;
-    this.locationChosen=true;
+  //Actualizar imagenes in Image Previwe
+  onInputChange2(event: any, index: number) {
+    try{
+      this.input_imagenes[index].imagen = event.target.value; 
+    }catch(e){
+    }
   }
 
-  //obtener horarios
-  guardarHorarios() {
-    // Aquí puedes manejar la lógica para guardar los horarios en tu base de datos o donde sea necesario
-    console.log(this.horarios);
-  }
 
-  imprimirImagenes(){
-    console.log(this.input_imagenes)
-  }
-
-  //cambiar de pagina en la paginación
+  //PAGINACION --------------------------------------------
   goToPage(pageNumber: number) {
     this.currentPage = pageNumber;
+    this.scrollToCenter()
   }
 
-  //guardar1
-  Guardar3(number: number){
-  }
-      //guardar1
-  Guardar4(number: number){
-    this.guardar4=true;
-    this.goToPage(number)
-  }
-  //guardar1
-  Guardar5(number: number){
-    this.guardar5=true;
-    this.goToPage(number)
-  }
-      //guardar1
-  Guardar6(number: number){
-    this.guardar6=true;
-    this.goToPage(number)
-  }
-
-  //formulario parte 1
+  /*FORMULARIOS-------------------------------------------*/
+  //formulario de datos generales
   nuevoSubmitted1() {
-    console.log(this.nuevoForm.value.nombre)
-    console.log(this.nuevoForm.value.descripcion)
-    console.log(this.nuevoForm.value.categoria)
+    //console.log(this.nuevoForm.value.nombre)
+    //console.log(this.nuevoForm.value.descripcion)
+    //console.log(this.nuevoForm.value.categoria)
 
     this.guardar1=true;
     this.goToPage(2)
   }
 
-  //formulario parte 2
+  //formulario de productos y/o servicios
   nuevoSubmitted2() {
     this.productosError="";
     this.nuevoForm2.value.productosservicios = this.inputList
-    console.log(this.inputList)
+    //console.log(this.inputList)
     this.nuevoForm2.value.productosservicios.forEach((x:any) => {
       if(x['value'].length < 4 || x['value'].length > 60){
         this.productosError='Algun campo se encuentra vacio o no cumple con la norma de contener al menos 4 caracteres y un maximo de 60 caracteres'
@@ -232,22 +268,64 @@ export class AgregarNegocioComponent implements OnInit {
     }
   }
 
-  //formulario parte 3
+  //formulario de direccion y horarios
   nuevoSubmitted3() {
-    console.log(this.nuevoForm3.value)
+    //agregamos un formato json a los horarios
+    var horarios : any=[]
+    this.diasSemana.forEach(dia => {
+      let nuevo = {
+        [dia] : this.nuevoForm3.get(dia)?.value
+      }
+      horarios.push(nuevo)
+    });
+
+    this.nuevoForm3.get('horarios')?.patchValue(horarios);
+    //ahora eliminamos
+
     this.guardar3=true;
     this.goToPage(4)
   }
 
-  //ver campos de direccion fisica
+  //formulario de redes sociales
+  nuevoSubmitted4() {
+    //console.log(this.nuevoForm4.value)
+    this.guardar4=true;
+    this.guardar5=true;
+    this.goToPage(6)
+  }
+
+  //formulario de imagenes de productos y/o servicios
+  nuevoSubmitted5(): void {
+    console.log(this.nuevoForm.value)
+    console.log(this.nuevoForm2.value)
+    console.log(this.nuevoForm3.value)
+    console.log("Latitude: "+ this.latitude+" Longitude: "+this.longitude)
+    console.log(this.nuevoForm4.value)
+    console.log(this.nuevoForm5.value)
+
+
+    this.diasSemana.forEach(dia => {
+      this.nuevoForm3.removeControl(dia);      
+    });
+
+  }
+
+
+  //Funcion para validar URLS de la web --------------------------------
+  validarURL(url: string): boolean {
+    const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;
+    return urlRegex.test(url);
+  }
+
+  //ver campos de direccion fisica --------------------------------------
   verCamposDireccion1(){
     this.tieneDireccion=true;
 
-    this.Calle.setValidators([Validators.required, Validators.minLength(4), Validators.maxLength(60)]);
-    this.Colonia.setValidators([Validators.required, Validators.minLength(4), Validators.maxLength(60)]);
-    this.Num_Calle.setValidators([Validators.required, Validators.minLength(2), Validators.maxLength(8)]);
+    this.Calle.setValidators([Validators.required, Validators.minLength(2), Validators.maxLength(60), this.noWhitespaceValidator()]);
+    this.Colonia.setValidators([Validators.required, Validators.minLength(3), Validators.maxLength(60), this.noWhitespaceValidator()]);
+    this.Num_Calle.setValidators([Validators.required, Validators.minLength(2), Validators.maxLength(8), this.noWhitespaceValidator()]);
     this.Cp.setValidators([Validators.required, Validators.pattern(this.cpRegex)]);
-    this.Interior.setValidators([Validators.minLength(1), Validators.maxLength(4)]);
+    this.Interior.setValidators([Validators.minLength(1), Validators.maxLength(5), this.noWhitespaceValidator()]);
   
     this.Calle.updateValueAndValidity();
     this.Colonia.updateValueAndValidity();
@@ -256,7 +334,7 @@ export class AgregarNegocioComponent implements OnInit {
     this.Interior.updateValueAndValidity();
 
   }
-  //ocultar campos de direccion fisica
+  //ocultar campos de direccion fisica ---------------------------------
   ocultarCamposDireccion2(){
     this.tieneDireccion=false;
 
@@ -276,7 +354,7 @@ export class AgregarNegocioComponent implements OnInit {
     this.Interior.updateValueAndValidity();
   }
 
-  //get de mis campos del formulario
+  //Funciones para obtener los valores de mis FormGroups
   get Nombre(): FormControl {
     return this.nuevoForm.get('nombre') as FormControl;
   }
@@ -304,14 +382,20 @@ export class AgregarNegocioComponent implements OnInit {
   get Cp(): FormControl {
     return this.nuevoForm3.get('cp') as FormControl;
   }
-  get Horario(): FormControl {
-    return this.nuevoForm3.get('horario') as FormControl;
-  }
   get Img_Logo(): FormControl {
     return this.nuevoForm.get('img_logo') as FormControl;
   }
-  get Imagenes(): FormControl {
+  get Url(): FormControl {
     return this.nuevoForm.get('imagenes') as FormControl;
+  }
+  get Facebook(): FormControl{
+    return this.nuevoForm4.get('facebook') as FormControl
+  }
+  get Instagram(): FormControl{
+    return this.nuevoForm4.get('instagram') as FormControl
+  }
+  get Whatsapp(): FormControl{
+    return this.nuevoForm4.get('whatsapp') as FormControl
   }
 }
 
