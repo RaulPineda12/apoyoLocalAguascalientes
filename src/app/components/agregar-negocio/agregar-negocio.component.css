@@ -32,3 +32,14 @@ agm-map {
   border: 1px solid #0d6efd;
   margin-right: 2px;
 }
+
+.search-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background-color: white;
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
