@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { NegocioService } from 'src/app/services/negocio/negocio.service';
 
 import Swal from 'sweetalert2'
 
@@ -11,24 +12,24 @@ import Swal from 'sweetalert2'
 })
 export class AgregarNegocioComponent implements OnInit {
 
-  //esta variable servira para manejar los inputs dinamicos para los productos
-  inputList: { value: string }[] = [];
   //esta variable controlará que el usuario no agregue masde 10 productos
   productosError: string="";
   //mensaje de error cuando se agreguen imagenes
   imagenesError: string="";
   //mensaje de error cuando se cargue incorrectamente una imagen
   imagenError: string=""
-  //input image
-  input_imagenes: any[] = [];
+  //imagen del logotipo
+  input_logo:string="";
   //latitude
   latitude: number=21.88186547214265;
   //longitude
   longitude: number=-102.29118377006671;  
   //localizacion elegida
   locationChosen = false;
-  //dias de la semana
-  diasSemana: string[] = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'];  
+  //dias de la semana  
+  //diasSemana: string[] = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'];  
+  diasSemana: string[] = ['Lunes','Martes'];  
+
   //horarios del negocio
   horarios: { [key: string]: FormControl } = {};
   //pagina inicial de la paginación
@@ -66,12 +67,12 @@ export class AgregarNegocioComponent implements OnInit {
     nombre: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.noWhitespaceValidator()]),
     categoria: new FormControl('', [Validators.required]),
     descripcion: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(500), this.noWhitespaceValidator]),
+    img_logo: new FormControl('', [Validators.required, Validators.pattern(this.urlRegex)]),
   });
 
   //PRODUCTOS Y/O SERVICIOS fomrulario
-  nuevoForm2 = new FormGroup({
-    productosservicios: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(60)]),
-  })
+  nuevoForm2: FormGroup;
+
 
   //DIRECCION Y HORARIOS formulario
   nuevoForm3:FormGroup;
@@ -86,10 +87,15 @@ export class AgregarNegocioComponent implements OnInit {
   //IMAGENES DE PRODUCTOS Y/O SERVICIOS formulario
   nuevoForm5: FormGroup
 
-
   /*CONSTRUCTOR*/
-  constructor(private http: HttpClient, private formBuilder: FormBuilder) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private negocioService: NegocioService) {
     
+    //crear formulario 2 de productos y/o servicios
+    this.nuevoForm2 = this.formBuilder.group({
+      productosservicios: this.formBuilder.array([])
+    });
+
+
     //crear formulario 3
     this.nuevoForm3=this.formBuilder.group({
       calle: new FormControl(''),
@@ -100,9 +106,9 @@ export class AgregarNegocioComponent implements OnInit {
       horarios: new FormControl(''),
     });
 
-    //formulario Imagenes
+    //crea formulario 5
     this.nuevoForm5 = this.formBuilder.group({
-      // Puedes dejar esto vacío ya que los formGroups individuales se agregarán dinámicamente
+      productosimagenes: this.formBuilder.array([]) // Aquí inicializas el FormArray
     });
 
     // Crear un FormControl para cada día y agregarlos al FormGroup
@@ -114,21 +120,12 @@ export class AgregarNegocioComponent implements OnInit {
 
   /*NG ONINIT()*/
   ngOnInit(): void {
+    this.agregarProducto();
     this.agregarImagen();
   }
 
   /*------------------------------------FUNCIONES--------------------------------------------*/
-  crear(){
-    Swal.fire({
-      icon: 'success',
-      title: 'Negocio creado',
-      imageHeight: 100,
-      showConfirmButton: false,
-      width: 400,
-      timer: 2000,
-    })
-  }
-
+  //funcion para centrar al usuario al centro de la pantalla
   scrollToCenter() {
     window.scrollTo({
       top: window.innerHeight / 20,
@@ -137,7 +134,7 @@ export class AgregarNegocioComponent implements OnInit {
     });
   }
 
-  //funcion para evitar espacios en blanco no deseables
+  //funcion para evitar espacios en blanco no deseables al inicio o final de un texto
   noWhitespaceValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const value = control.value;
@@ -161,26 +158,14 @@ export class AgregarNegocioComponent implements OnInit {
   //PRODUCTOS Y/O SERVICIOS ---------------
   //agregarProducto
   agregarProducto() {
-    //condicion para que el ususario no agregue mas de 10 productos
-    if(this.inputList.length<=7){
-      this.inputList.push({ value: '' });
-    }else{
-      this.productosError="Ya no puedes agregar mas productos y/o servicios"
-      Swal.fire({
-        icon: 'error',
-        title: this.productosError,
-        imageHeight: 100,
-      })
-    }
+    this.productosServicios.push(this.formBuilder.control('', [Validators.required, this.noWhitespaceValidator(), Validators.minLength(3),Validators.maxLength(60)]));
   }
 
-  //remover producto
   removerProducto(index: number) {
-    this.inputList.splice(index, 1);
+    this.productosServicios.removeAt(index);
   }
-  //productos
+
   onInputChange(event: any, index: number) {
-    this.inputList[index].value = event.target.value;
   }
 
   //UBICACION GOOGLE MAPS--------------------
@@ -201,36 +186,18 @@ export class AgregarNegocioComponent implements OnInit {
 
   //IMAGENES DE PRODUCTOS --------------------
   //agregar Imagen
-  agregarImagen(): void {
-    if(this.input_imagenes.length <=9){
-      //creamos el nuevo input con sus validaciones
-      const imagenFormGroup = this.formBuilder.group({
-        url: ['',[Validators.required, Validators.pattern(this.urlRegex)]] // Puedes agregar otras validaciones aquí
-      });
-
-      //agregamos el nuevo input
-      this.input_imagenes.push(imagenFormGroup);
-      this.nuevoForm5.addControl(`imagen_${this.input_imagenes.length}`, imagenFormGroup);
-    }else{
-      Swal.fire({
-        icon: 'error',
-        title: "Limite de imagenes alcanzado",
-        imageHeight: 100,
-      })
-    }
+  agregarImagen() {
+    this.productosImagenes.push(this.formBuilder.control('', [Validators.required, Validators.pattern(this.urlRegex)]));
   }
 
-  removerImagen(index: number): void {
-    this.input_imagenes.splice(index, 1);
-    this.nuevoForm5.removeControl(`imagen_${index + 1}`);
+  removerImagen(index: number) {
+    this.productosImagenes.removeAt(index);
   }
+
 
   //Actualizar imagenes in Image Previwe
   onInputChange2(event: any, index: number) {
-    try{
-      this.input_imagenes[index].imagen = event.target.value; 
-    }catch(e){
-    }
+  
   }
 
 
@@ -253,19 +220,12 @@ export class AgregarNegocioComponent implements OnInit {
 
   //formulario de productos y/o servicios
   nuevoSubmitted2() {
-    this.productosError="";
-    this.nuevoForm2.value.productosservicios = this.inputList
-    //console.log(this.inputList)
-    this.nuevoForm2.value.productosservicios.forEach((x:any) => {
-      if(x['value'].length < 4 || x['value'].length > 60){
-        this.productosError='Algun campo se encuentra vacio o no cumple con la norma de contener al menos 4 caracteres y un maximo de 60 caracteres'
-      }
-    });
-    if(this.productosError == ""){
-        //console.log(this.inputList)
-        this.guardar2=true;
-        this.goToPage(3)
-    }
+    const valores = this.productosServicios.value;
+    //console.log(valores);
+
+    //console.log(this.nuevoForm2.value)
+    this.guardar2=true;
+    this.goToPage(3)
   }
 
   //formulario de direccion y horarios
@@ -296,26 +256,57 @@ export class AgregarNegocioComponent implements OnInit {
 
   //formulario de imagenes de productos y/o servicios
   nuevoSubmitted5(): void {
-    console.log(this.nuevoForm.value)
-    console.log(this.nuevoForm2.value)
-    console.log(this.nuevoForm3.value)
-    console.log("Latitude: "+ this.latitude+" Longitude: "+this.longitude)
-    console.log(this.nuevoForm4.value)
-    console.log(this.nuevoForm5.value)
+    // console.log(this.nuevoForm.value)
+    // console.log(this.nuevoForm2.value)
+    // console.log(this.nuevoForm3.value)
+    // console.log("Latitude: "+ this.latitude+" Longitude: "+this.longitude)
+    // console.log(this.nuevoForm4.value)
+    // console.log(this.nuevoForm5.value)
 
 
+    //borrar los dias de la semana del form3 y solamente dejar la variable horarios
+    /*
     this.diasSemana.forEach(dia => {
       this.nuevoForm3.removeControl(dia);      
     });
+    */
 
+    //enviar al service de agregar
+    this.negocioService.agregar(this.nuevoForm.value,this.nuevoForm2.value,this.nuevoForm3.value,this.nuevoForm4.value,this.nuevoForm5.value,this.latitude,this.longitude)
+    .subscribe(async (res:any)=>{
+      console.log(res)
+      if(res=="agregado"){
+        Swal.fire({
+          icon: 'success',
+          title: 'Negocio agregado',
+          imageHeight:100,
+          timer: 2500,
+          showConfirmButton: false
+        });
+      }else if(res=="Ya existe un negocio con el mismo nombre"){
+        Swal.fire({
+          icon: 'error',
+          title: res,
+          imageHeight:100,
+          showConfirmButton: true,
+          confirmButtonColor: '#2F328A',
+        });
+      }
+    },(error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en el servidor',
+        imageHeight: 400,
+      })
+    });
   }
 
 
   //Funcion para validar URLS de la web --------------------------------
-  validarURL(url: string): boolean {
-    const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;
-    return urlRegex.test(url);
-  }
+  // validarURL(url: string): boolean {
+  //   const urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;
+  //   return urlRegex.test(url);
+  // }
 
   //ver campos de direccion fisica --------------------------------------
   verCamposDireccion1(){
@@ -337,6 +328,14 @@ export class AgregarNegocioComponent implements OnInit {
   //ocultar campos de direccion fisica ---------------------------------
   ocultarCamposDireccion2(){
     this.tieneDireccion=false;
+
+    //limpiamos los campos de la direccion
+    this.nuevoForm3.get('calle')?.patchValue("");
+    this.nuevoForm3.get('num_calle')?.patchValue("");
+    this.nuevoForm3.get('interior')?.patchValue("");
+    this.nuevoForm3.get('colonia')?.patchValue("");
+    this.nuevoForm3.get('cp')?.patchValue("");
+
 
     this.Calle.clearValidators();
     this.Calle.updateValueAndValidity();
@@ -396,6 +395,12 @@ export class AgregarNegocioComponent implements OnInit {
   }
   get Whatsapp(): FormControl{
     return this.nuevoForm4.get('whatsapp') as FormControl
+  }
+  get productosServicios() {
+    return this.nuevoForm2.get('productosservicios') as FormArray;
+  }
+  get productosImagenes() {
+    return this.nuevoForm5.get('productosimagenes') as FormArray;
   }
 }
 

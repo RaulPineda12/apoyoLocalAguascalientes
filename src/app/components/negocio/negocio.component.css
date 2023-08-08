@@ -34,7 +34,7 @@ section{
   opacity: 0.9;
   -webkit-filter: blur(5px);
   filter: blur(5px);
-   -webkit-transform: scale(1.8);
+  -webkit-transform: scale(1.8);
   transform: scale(2.8);
 }
 .profile-card-1 .card-content {

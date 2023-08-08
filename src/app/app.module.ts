@@ -18,6 +18,7 @@ import { NegocioComponent } from './components/negocio/negocio.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AgregarNegocioComponent } from './components/agregar-negocio/agregar-negocio.component';
 import { FormsModule } from '@angular/forms';
+import { CategoriaComponent } from './components/categoria/categoria.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     NavbarComponent,
     FooterComponent,
     NegocioComponent,
-    AgregarNegocioComponent
+    AgregarNegocioComponent,
+    CategoriaComponent
   ],
   imports: [
     BrowserModule,

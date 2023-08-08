@@ -8,10 +8,6 @@ body{
     background-color: #DFE3EE;
 }
 
-h1,h2,h3,h4{
-    color: #2F328A;
-}
-
 /*background blue gradient*/
 .bg-blue{
     background: linear-gradient(141deg, rgba(28, 161, 244, 0.833) 0%, rgb(17, 1, 106) 96%);
@@ -77,6 +73,20 @@ h1,h2,h3,h4{
     border-radius: 1em;
 }
 
-.btn-outline-primary:hover{
+.btn-primary{
     background-color: #2F328A;
 }
+
+.btn-primary:hover{
+    background-color: #1b1d6d;
+}
+
+.btn-primary:disabled{
+    background-color: #2F328A;
+}
+
+/*tamaño minimo de la pantalla*/
+.screen-height{
+    min-height: calc(100vh - 70px)
+}  
+
