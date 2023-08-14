@@ -7,9 +7,10 @@ import { CategoriaComponent } from './components/categoria/categoria.component';
 
 const routes: Routes = [
   {path:'home', component: HomeComponent},
-  {path:'negocio', component: NegocioComponent},
+  {path:'negocio/:id/:nombre', component: NegocioComponent},
   {path:'agregar-negocio', component: AgregarNegocioComponent},
   {path:'categoria/:categoria', component: CategoriaComponent},
+
 
   {path:'**', component: HomeComponent},
 

@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CategoriaService } from 'src/app/services/categoria/categoria.service';
 import { NegocioService } from 'src/app/services/negocio/negocio.service';
 
 import Swal from 'sweetalert2'
@@ -11,6 +13,8 @@ import Swal from 'sweetalert2'
   styleUrls: ['./agregar-negocio.component.css']
 })
 export class AgregarNegocioComponent implements OnInit {
+  //esta variable es para el loading mientras carga la informacion de la pagina
+  cargando:boolean=true;
 
   //esta variable controlará que el usuario no agregue masde 10 productos
   productosError: string="";
@@ -20,6 +24,10 @@ export class AgregarNegocioComponent implements OnInit {
   imagenError: string=""
   //imagen del logotipo
   input_logo:string="";
+  //variable para el select de categorias
+  selectedOption: string=""
+  //aqui guardamos las categorias
+  categoriasArray:any;
   //latitude
   latitude: number=21.88186547214265;
   //longitude
@@ -27,8 +35,8 @@ export class AgregarNegocioComponent implements OnInit {
   //localizacion elegida
   locationChosen = false;
   //dias de la semana  
-  //diasSemana: string[] = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'];  
-  diasSemana: string[] = ['Lunes','Martes'];  
+  diasSemana: string[] = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'];  
+  //diasSemana: string[] = ['Lunes','Martes'];  
 
   //horarios del negocio
   horarios: { [key: string]: FormControl } = {};
@@ -64,9 +72,9 @@ export class AgregarNegocioComponent implements OnInit {
   //formulario reactivo
   //DATOS GENERALES formulario
   nuevoForm = new FormGroup({
-    nombre: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), this.noWhitespaceValidator()]),
+    nombre: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50), this.noWhitespaceValidator()]),
     categoria: new FormControl('', [Validators.required]),
-    descripcion: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(500), this.noWhitespaceValidator]),
+    descripcion: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(600), this.noWhitespaceValidator]),
     img_logo: new FormControl('', [Validators.required, Validators.pattern(this.urlRegex)]),
   });
 
@@ -88,7 +96,7 @@ export class AgregarNegocioComponent implements OnInit {
   nuevoForm5: FormGroup
 
   /*CONSTRUCTOR*/
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private negocioService: NegocioService) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private negocioService: NegocioService, private categoriasservice: CategoriaService, private router: Router) {
     
     //crear formulario 2 de productos y/o servicios
     this.nuevoForm2 = this.formBuilder.group({
@@ -120,18 +128,17 @@ export class AgregarNegocioComponent implements OnInit {
 
   /*NG ONINIT()*/
   ngOnInit(): void {
+    //cargamos las categorias primero
+    this.cargarCategorias();
     this.agregarProducto();
     this.agregarImagen();
   }
 
   /*------------------------------------FUNCIONES--------------------------------------------*/
   //funcion para centrar al usuario al centro de la pantalla
-  scrollToCenter() {
-    window.scrollTo({
-      top: window.innerHeight / 20,
-      left: window.innerWidth / 20,
-      behavior: 'smooth'
-    });
+  scrollToTop() {
+    // Lleva al usuario hasta arriba de la pantalla
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   //funcion para evitar espacios en blanco no deseables al inicio o final de un texto
@@ -153,6 +160,22 @@ export class AgregarNegocioComponent implements OnInit {
     if (event.key === ' ') {
       event.preventDefault();
     }
+  }
+
+  cargarCategorias(){
+    this.categoriasservice.cargarCategorias().subscribe((res:any)=>{
+      this.categoriasArray = res;
+      this.selectedOption=this.categoriasArray[0].nombre
+      this.cargando = false;
+    })
+  }
+
+  //funcion que actualiza si el usuario cambia de opcion en el select
+  onCategoriaChange(event: any) {
+    const categoriaNombre = event.target.value;
+    this.nuevoForm.patchValue({
+      categoria: categoriaNombre
+    });
   }
 
   //PRODUCTOS Y/O SERVICIOS ---------------
@@ -204,7 +227,7 @@ export class AgregarNegocioComponent implements OnInit {
   //PAGINACION --------------------------------------------
   goToPage(pageNumber: number) {
     this.currentPage = pageNumber;
-    this.scrollToCenter()
+    this.scrollToTop()
   }
 
   /*FORMULARIOS-------------------------------------------*/
@@ -270,7 +293,7 @@ export class AgregarNegocioComponent implements OnInit {
       this.nuevoForm3.removeControl(dia);      
     });
     */
-
+   
     //enviar al service de agregar
     this.negocioService.agregar(this.nuevoForm.value,this.nuevoForm2.value,this.nuevoForm3.value,this.nuevoForm4.value,this.nuevoForm5.value,this.latitude,this.longitude)
     .subscribe(async (res:any)=>{
@@ -283,6 +306,7 @@ export class AgregarNegocioComponent implements OnInit {
           timer: 2500,
           showConfirmButton: false
         });
+        this.router.navigate(['home']);
       }else if(res=="Ya existe un negocio con el mismo nombre"){
         Swal.fire({
           icon: 'error',

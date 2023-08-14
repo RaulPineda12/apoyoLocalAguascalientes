@@ -1,44 +1,54 @@
-  <nav class="navbar navbar-expand-lg mb-5 bg-blue fixed-top  p-3 shadow-sm animate__animated animate__fadeInDown animate__slower">
+  <nav class="navbar navbar-expand-lg mb-5 fixed-top  p-3 shadow-sm animate__animated animate__fadeInDown animate__slower bg-blue" style="display: flex; justify-content: center; align-items: center;">
     <div class="container">
       <!--Brand name-->
-      <a class="navbar-brand text-white"  [routerLink]="['home']">
-        <i class="fa fa-bullhorn fa-lg" aria-hidden="true"></i> APOYO HIDROCALIDO <i class="fa fa-bullhorn fa-lg" aria-hidden="true"></i>
-      </a>
-      <!--expantion button-->
-      <button class="navbar-toggler mb-3 text-white" style="border-color:white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fa fa-bars text-white" aria-hidden="true" ></i>
-      </button> 
-
+        <a class="navbar-brand text-white ms-2" (click)="this.scrollToTop()" [routerLink]="['home']">
+        <span class="text-shadow-black"><div class="neon"> <i class="fa fa-connectdevelop" aria-hidden="true"></i>
+          Hecho en Aguascalientes <i class="fa fa-connectdevelop" aria-hidden="true"></i>
+        </div></span>
+        </a>
+        <!--expantion button-->
+        <button class="navbar-toggler mb-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fa fa-caret-square-o-down fa-lg text-white" aria-hidden="true"></i>
+        </button> 
       <!--list of topic-->
-      <div class=" collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav ms-auto">
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto" >
           <!--search element-->
-        <div class="input-group">
-            <span class="border-warning input-group-text bg-warning text-white"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input type="text" class="form-control border-warning" style="color:#7a7a7a">
-            <button class="btn btn-warning text-white" style="font-weight: bold;">Buscar</button>
+        <div class="input-group me-5">
+            <input type="text" class="form-control p-1" style="color:#7a7a7a;">
+            <button class="btn bg-primary btn-primary text-white ps-2 pe-2" style="font-weight: bold; padding: 5px;">Buscar</button>
         </div>
         <!--Categories dropdown-->
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle mx-2 text-uppercase" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Categorias
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Comida</a></li>
+            <li><a class="dropdown-item"  (click)="navegarACategoria('Joyeria y/o Bisuteria')">Joyeria y/o Bisuteria </a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Tecnología</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#" routerLink="/categoria/Joyeria">Joyeria</a></li>
+            <li><a class="dropdown-item"  (click)="navegarACategoria('Comida')">Comida</a></li>
           </ul>
+        </li> -->
+        <!--AGREGAR-->
+        <li class="menu-item">
+          <a aria-disabled="true" (click)="CloseMenu2()"  [routerLink]="['agregar-negocio']">Agregar</a>
         </li>
-          <!---->
-          <li class="nav-item">
-            <a class="nav-link mx-2 text-uppercase " (click)="CloseMenu()" [routerLink]="['negocio']" aria-current="page" href="#">Agapi</a>
-          </li>
-          <!---->
-          <li class="nav-item">
+        <!--(click)="CloseMenu2()"  [routerLink]="['agregar-negocio']">
+
+
+        <!--CATEGORIAS-->
+        <li class="menu-item">
+          <a>Categorias</a>
+          <ol class="sub-menu">
+            <li class="menu-item" *ngFor="let categoria of this.categorias"><a (click)="navegarACategoria(categoria.nombre)">{{categoria.nombre}}</a></li>
+          </ol>
+        </li>
+
+
+          <!--AGREGAR-->
+          <!-- <li class="nav-item">
             <a class="nav-link mx-2 text-uppercase" (click)="CloseMenu()" [routerLink]="['agregar-negocio']" href="#">Agregar</a>
-          </li>
+          </li> -->
         </ul>
         <!--
         <ul class="navbar-nav ms-auto ">

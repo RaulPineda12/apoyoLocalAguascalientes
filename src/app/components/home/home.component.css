@@ -9,21 +9,22 @@
     background-position: center;
     background-repeat: no-repeat;
 }
-.intro h1 {
+.main-header {
+    text-shadow: 2px 2px 20px rgba(255,255,255,0.53), 
+    2px 2px 20px rgba(255,255,255,0.53), 
+    2px 2px 20px rgba(26,35,133,0.53), 
+    2px 2px 20px rgba(26,35,133,0.53), 
+    2px 2px 20px rgba(26,35,133,0.53);
     font-family: sans-serif;
-    font-size: 60px;
     color: #fff;
     font-weight: bold;
+    font-size: 2.1em;
     text-transform: uppercase;
     margin: 0;
-    text-shadow: -1px 1px 0 #000,
-    2px 2px 0 #000,
-    1px -1px 0 #000,
-    -1px -1px 0 #000;
 }
 
 .intro p {
-    font-size: 30px;
+    font-size: 1.5em;
     color: #d1d1d1;
     text-transform: uppercase;
     margin: 20px 0;

@@ -1,0 +1,94 @@
+[debug] [2023-08-14T18:34:49.409Z] ----------------------------------------------------------------------
+[debug] [2023-08-14T18:34:49.412Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\zonic\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-08-14T18:34:49.413Z] CLI Version:   12.4.0
+[debug] [2023-08-14T18:34:49.413Z] Platform:      win32
+[debug] [2023-08-14T18:34:49.414Z] Node Version:  v16.17.1
+[debug] [2023-08-14T18:34:49.418Z] Time:          Mon Aug 14 2023 13:34:49 GMT-0500 (hora de verano central)
+[debug] [2023-08-14T18:34:49.419Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-08-14T18:34:49.609Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-08-14T18:34:49.611Z] > authorizing via signed-in user (zonico200@gmail.com)
+[debug] [2023-08-14T18:34:49.611Z] [iam] checking project hechoenaguascalientes-raulp for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-08-14T18:34:49.621Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/hechoenaguascalientes-raulp:testIamPermissions [none]
+[debug] [2023-08-14T18:34:49.622Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/hechoenaguascalientes-raulp:testIamPermissions x-goog-quota-user=projects/hechoenaguascalientes-raulp
+[debug] [2023-08-14T18:34:49.623Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/hechoenaguascalientes-raulp:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-08-14T18:34:57.038Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/hechoenaguascalientes-raulp:testIamPermissions 200
+[debug] [2023-08-14T18:34:57.039Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/hechoenaguascalientes-raulp:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-08-14T18:34:57.041Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/hechoenaguascalientes-raulp [none]
+[debug] [2023-08-14T18:34:59.946Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/hechoenaguascalientes-raulp 200
+[debug] [2023-08-14T18:34:59.946Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/hechoenaguascalientes-raulp {"projectId":"hechoenaguascalientes-raulp","projectNumber":"229981641057","displayName":"HechoEnAguascalientes-RaulP","name":"projects/hechoenaguascalientes-raulp","resources":{"hostingSite":"hechoenaguascalientes-raulp"},"state":"ACTIVE","etag":"1_9ff86594-93dd-464a-b591-a01c78d46264"}
+[info] 
+[info] === Deploying to 'hechoenaguascalientes-raulp'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2023-08-14T18:34:59.994Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/versions [none]
+[debug] [2023-08-14T18:34:59.995Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2023-08-14T18:35:01.955Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/versions 200
+[debug] [2023-08-14T18:35:01.955Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/versions {"name":"projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[hechoenaguascalientes-raulp]: beginning deploy... 
+[info] i  hosting[hechoenaguascalientes-raulp]: found 13 files in dist/proyectoAguascalientes 
+[debug] [2023-08-14T18:35:02.002Z] [hosting] uploading with 200 concurrency
+[debug] [2023-08-14T18:35:02.073Z] [hosting] hash cache [ZGlzdFxwcm95ZWN0b0FndWFzY2FsaWVudGVz] stored for 13 files
+[debug] [2023-08-14T18:35:02.074Z] [hosting][hash queue][FINAL] {"max":54,"min":1,"avg":12.384615384615385,"active":0,"complete":13,"success":13,"errored":0,"retried":0,"total":13,"elapsed":65}
+[debug] [2023-08-14T18:35:02.074Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c:populateFiles [none]
+[debug] [2023-08-14T18:35:02.075Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c:populateFiles {"files":{"/favicon.ico":"2c19690e9587bae12f419b34d2edeecc76808099540a9c9f4ea6194116cfc8f7","/assets/sonicIcon.png":"64e5f88460965359bb1c86610b26e3ae3c66da02379e33f720f6e0101bfeeae3","/assets/images/noImage.png":"69769a94ba40997dbc6f429bb57203a4f1deca2b4bbfa19876f034e0006dd03a","/assets/images/staticImages/agaphi-logo.png":"21b31d2a5d59f594e96a1e9ac0f2434a1869bfc1d8580b1bbd3037d89d7a2e1e","/assets/images/staticImages/flamingos.jpg":"ed9078e8fb9b11d43e7cbfc2e73bafab8cc1326c2552e544dae796f0d23974a0","/assets/images/staticImages/hastaelgorrologo.jpg":"95227d9792d36c2a09a4e9ee2541cb5dd84225534a497d41eae1d8fb2c6bf7ac","/index.html":"bc35c40412da406c7676b26db78996df63c62b0f27cf7f92645296015e631741","/3rdpartylicenses.txt":"3aa54a2c5f161bf5618ffb730c7845533829bb0ed592bf4c92c577564885696c","/runtime.7b63b9fd40098a2e8207.js":"8351e28e6622d0d4825d766649b2ae0e8767c34304fff594f102bfe52b7e4e29","/styles.7d57a4fb934cc17ed08b.css":"3d02395cddfd93f58aa5cebc7b65006fd431db837dc313443c71e0d1d1967f7c","/polyfills.daf8130ab8f17a1b6340.js":"372cefddad4e8a4fa7dc9268e575639feb05767fa5dd4bb898fed9b938c6e96c","/scripts.d7cd36eddd8cb57c4324.js":"cefbce39353108bb1cf107881b933417aaf862c6cc4655b1d3d12532405fcb51","/main.3bc39e6eb1da76f3966f.js":"dd2a0d518d9f3d69a775060d40a3fcc03ef31f8d3db34a92724d089c51e8098e"}}
+[debug] [2023-08-14T18:35:05.383Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c:populateFiles 200
+[debug] [2023-08-14T18:35:05.383Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c:populateFiles {"uploadRequiredHashes":["dd2a0d518d9f3d69a775060d40a3fcc03ef31f8d3db34a92724d089c51e8098e","bc35c40412da406c7676b26db78996df63c62b0f27cf7f92645296015e631741"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files"}
+[debug] [2023-08-14T18:35:05.386Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files/dd2a0d518d9f3d69a775060d40a3fcc03ef31f8d3db34a92724d089c51e8098e [none]
+[debug] [2023-08-14T18:35:05.387Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files/dd2a0d518d9f3d69a775060d40a3fcc03ef31f8d3db34a92724d089c51e8098e [stream]
+[debug] [2023-08-14T18:35:05.390Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files/bc35c40412da406c7676b26db78996df63c62b0f27cf7f92645296015e631741 [none]
+[debug] [2023-08-14T18:35:05.390Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files/bc35c40412da406c7676b26db78996df63c62b0f27cf7f92645296015e631741 [stream]
+[debug] [2023-08-14T18:35:05.392Z] [hosting][populate queue][FINAL] {"max":3315,"min":3315,"avg":3315,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":3321}
+[debug] [2023-08-14T18:35:05.393Z] [hosting] uploads queued: 2
+[debug] [2023-08-14T18:35:09.111Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files/bc35c40412da406c7676b26db78996df63c62b0f27cf7f92645296015e631741 200
+[debug] [2023-08-14T18:35:09.112Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files/bc35c40412da406c7676b26db78996df63c62b0f27cf7f92645296015e631741 [stream]
+[debug] [2023-08-14T18:35:10.244Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files/dd2a0d518d9f3d69a775060d40a3fcc03ef31f8d3db34a92724d089c51e8098e 200
+[debug] [2023-08-14T18:35:10.244Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c/files/dd2a0d518d9f3d69a775060d40a3fcc03ef31f8d3db34a92724d089c51e8098e [stream]
+[debug] [2023-08-14T18:35:10.245Z] [hosting][upload queue][FINAL] {"max":4861,"min":3727,"avg":4294,"active":0,"complete":2,"success":2,"errored":0,"retried":0,"total":2,"elapsed":4861}
+[info] +  hosting[hechoenaguascalientes-raulp]: file upload complete 
+[debug] [2023-08-14T18:35:10.247Z] [hosting] deploy completed after 8284ms
+[debug] [2023-08-14T18:35:10.254Z] [
+  {
+    "config": {
+      "public": "dist/proyectoAguascalientes",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "site": "hechoenaguascalientes-raulp"
+    },
+    "version": "projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c"
+  }
+]
+[info] i  hosting[hechoenaguascalientes-raulp]: finalizing version... 
+[debug] [2023-08-14T18:35:10.262Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c updateMask=status%2Cconfig
+[debug] [2023-08-14T18:35:10.263Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c {"status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]}}
+[debug] [2023-08-14T18:35:12.152Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c 200
+[debug] [2023-08-14T18:35:12.153Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c {"name":"projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2023-08-14T18:34:59.878041Z","createUser":{"email":"zonico200@gmail.com"},"finalizeTime":"2023-08-14T18:35:09.938134Z","finalizeUser":{"email":"zonico200@gmail.com"}}
+[debug] [2023-08-14T18:35:12.153Z] [hosting] finalized version for hechoenaguascalientes-raulp:[object Object]
+[info] +  hosting[hechoenaguascalientes-raulp]: version finalized 
+[info] i  hosting[hechoenaguascalientes-raulp]: releasing new version... 
+[debug] [2023-08-14T18:35:12.157Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/channels/live/releases versionName=projects%2F229981641057%2Fsites%2Fhechoenaguascalientes-raulp%2Fversions%2F9588daf73efd036c
+[debug] [2023-08-14T18:35:12.158Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/channels/live/releases {}
+[debug] [2023-08-14T18:35:14.003Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/channels/live/releases 200
+[debug] [2023-08-14T18:35:14.004Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/hechoenaguascalientes-raulp/channels/live/releases {"name":"projects/229981641057/sites/hechoenaguascalientes-raulp/channels/live/releases/1692038111063000","version":{"name":"projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2023-08-14T18:34:59.878041Z","createUser":{"email":"zonico200@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AAcHTteemjSSAjdTJLZTiTuj2Z_MwOrwQnfXnINMO0xUCKKfgRPV"},"finalizeTime":"2023-08-14T18:35:09.938134Z","finalizeUser":{"email":"zonico200@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AAcHTteemjSSAjdTJLZTiTuj2Z_MwOrwQnfXnINMO0xUCKKfgRPV"}},"type":"DEPLOY","releaseTime":"2023-08-14T18:35:11.063Z","releaseUser":{"email":"zonico200@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AAcHTteemjSSAjdTJLZTiTuj2Z_MwOrwQnfXnINMO0xUCKKfgRPV"}}
+[debug] [2023-08-14T18:35:14.004Z] [hosting] release: {"name":"projects/229981641057/sites/hechoenaguascalientes-raulp/channels/live/releases/1692038111063000","version":{"name":"projects/229981641057/sites/hechoenaguascalientes-raulp/versions/9588daf73efd036c","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2023-08-14T18:34:59.878041Z","createUser":{"email":"zonico200@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AAcHTteemjSSAjdTJLZTiTuj2Z_MwOrwQnfXnINMO0xUCKKfgRPV"},"finalizeTime":"2023-08-14T18:35:09.938134Z","finalizeUser":{"email":"zonico200@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AAcHTteemjSSAjdTJLZTiTuj2Z_MwOrwQnfXnINMO0xUCKKfgRPV"}},"type":"DEPLOY","releaseTime":"2023-08-14T18:35:11.063Z","releaseUser":{"email":"zonico200@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/AAcHTteemjSSAjdTJLZTiTuj2Z_MwOrwQnfXnINMO0xUCKKfgRPV"}}
+[info] +  hosting[hechoenaguascalientes-raulp]: release complete 
+[info] 
+[info] +  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/hechoenaguascalientes-raulp/overview
+[info] Hosting URL: https://hechoenaguascalientes-raulp.web.app
+[debug] [2023-08-14T18:35:24.629Z] Error: Timed out.
+    at Timeout.<anonymous> (C:\Users\zonic\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:253:49)
+    at listOnTimeout (node:internal/timers:559:17)
+    at processTimers (node:internal/timers:502:7)
+[error] 
+[error] Error: An unexpected error has occurred.

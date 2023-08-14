@@ -1,89 +1,30 @@
-<div class="intro animate__animated animate__fadeInLeft animate__slow">
-    <h1 class="text-center">Negocios locales</h1>
-    <p class="text-center">Desarrollado por Raul Pineda</p>
-</div>
-
-<div class="container mt-4 fadeInAnimation" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
-    <h1 class="text-center web-font mb-5 headers-text text-shadow">Top 5 Locales Favoritos Por La Comunidad</h1>
-    <div class="row">
-        <div class="col">
-            <div class="card mb-3 box-shadow-black" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="../../../assets/images/staticImages/hastaelgorrologo.jpg" class="img-fluid rounded-start"
-                            alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Hasta el gorro</h5>
-                            <p class="card-text">“El trabajo hecho con gusto y con amor, siempre es una creación
-                                original y única.”
-                                Aguascalientes, Ags</p>
-                            <p class="card-text"><small class="text-muted"><strong>Contacto: 449 190
-                                        2200</strong></small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card mb-3 box-shadow-black" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="../../../assets/images/staticImages/agaphi-logo.png" class="img-fluid rounded-start"
-                            alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Joyeria Agapi</h5>
-                            <p class="card-text">“El trabajo hecho con gusto y con amor, siempre es una creación
-                                original y única.”
-                                Aguascalientes, Ags</p>
-                            <p class="card-text"><small class="text-muted"><strong>Contacto: 449 190
-                                        2200</strong></small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="conatiner screen-height">
+    <div class="intro animate__animated animate__fadeInLeft animate__slow">
+        <div class="container">
+            <h1 class="text-center main-header">HECHO EN AGUASCALIENTES</h1>
+            <p class="text-center ">Desarrollado por Raul Pineda</p>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-            <div class="card mb-3 box-shadow-black" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="../../../assets/images/staticImages/hastaelgorrologo.jpg" class="img-fluid rounded-start"
-                            alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Hasta el gorro</h5>
-                            <p class="card-text">“El trabajo hecho con gusto y con amor, siempre es una creación
-                                original y única.”
-                                Aguascalientes, Ags</p>
-                            <p class="card-text"><small class="text-muted"><strong>Contacto: 449 190
-                                        2200</strong></small></p>
+    <div class="container mt-4 fadeInAnimation" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+        <h1 class="text-center mb-5 text-shadow2 text-white text-header-beauty">Top Locales Favoritos Por La Comunidad</h1>
+        <app-loading *ngIf="this.isCargando"></app-loading>
+
+        <div class="row" *ngIf="!isCargando">
+            <div class="col-6" *ngFor="let negocio of this.negociosList; let i = index">
+                <div class="card mb-3 box-shadow-black" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{negocio.img_logo}}" class="img-fluid rounded-start"
+                                alt="...">
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card mb-3 box-shadow-black" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="../../../assets/images/staticImages/flamingos.jpg" class="img-fluid rounded-start"
-                            alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Flamingos Beach</h5>
-                            <p class="card-text">“El trabajo hecho con gusto y con amor, siempre es una creación
-                                original y única.”
-                                Aguascalientes, Ags</p>
-                            <p class="card-text"><small class="text-muted"><strong>Contacto: 449 190
-                                        2200</strong></small></p>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title web-color"><strong>{{negocio.nombre}}</strong></h5>
+                                <p class="card-text" style="font-weight: bold;">{{negocio.categoria}}</p>
+                                <a href="#" class="web-color" (click)="scrollToTop()" [routerLink]="['/negocio', this.negociosList[i].id, this.negociosList[i].nombre]"><strong>Ver más <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                </strong></a>
+                            </div>
                         </div>
                     </div>
                 </div>
