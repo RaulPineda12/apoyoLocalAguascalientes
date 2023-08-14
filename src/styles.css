@@ -4,6 +4,10 @@
     font-family: 'Lato', sans-serif;
 }
 
+.web-color{
+   color:#2F328A
+}
+
 body{
     background-color: #DFE3EE;
 }
@@ -29,7 +33,23 @@ body{
 /*color text for headers*/
 .headers-text{
     color: #2F328A;
+    text-shadow: 0px 1px 5px rgba(23, 134, 255, 0.61);
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.52);
+    text-shadow: 0px 0px 18px rgba(48, 86, 255, 0.52);
 }
+
+/*text header beauty*/
+.text-header-beauty{
+    text-align: center;
+    font-weight: bold;
+    background-image: linear-gradient(to left, #0b0d57, #26335a);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-shadow: 2px 2px 15px rgba(28,84,176,0.32), 2px 2px 15px rgba(28,84,176,0.32);
+}
+/*    background-image: linear-gradient(to left, #3c549a, #93a1d3);
+*/
 
 /*text shadow for small texts*/
 .text-shadow{
@@ -37,6 +57,10 @@ body{
     2px 2px 0 #000,
     1px -1px 0 #000,
     -1px -1px 0 #000;
+}
+
+.text-shadow2{
+    text-shadow: 2px 2px 9px rgba(0,0,0,0.47), 1px 0px 0px #000000, 1px 0px 20px #000000, 1px 0px 20px #000000, 1px 0px 20px #000000;
 }
 
 /*principal animation of the main page*/
@@ -53,8 +77,21 @@ body{
 
 /*blue line that separates sectionss*/
 .orange-line{
-    background: rgb(235,127,40); 
-    background: linear-gradient(141deg, rgba(235,127,40,1) 57%, rgba(255,219,6,1) 100%);
+    background: rgb(242,153,247);
+    background: linear-gradient(59deg, rgba(242,153,247,1) 0%, rgba(208,0,133,1) 100%);
+    width: 100%; 
+    height: 1em;
+    border-radius: 5em;
+}
+
+.headers-text2{
+    color: rgb(240, 25, 255);
+    text-shadow: 0px 1px 1px rgba(255, 23, 232, 0.764);
+    text-shadow: 0px 0px 5px rgba(89, 0, 137, 0.847);
+}
+
+.orange-line2{
+    background-image: linear-gradient(to left, #3c549a, #93a1d3);    
     width: 100%; 
     height: 1em;
     border-radius: 5em;
@@ -90,3 +127,9 @@ body{
     min-height: calc(100vh - 70px)
 }  
 
+
+/*neon*/
+.neon {
+    font-size: 20px;
+    text-shadow: -1px -1px 12px rgba(47,50,138,0.8), -1px -1px 12px rgba(47,50,138,0.8), -1px -1px 12px rgba(47,50,138,0.8), -1px -1px 12px rgba(47,50,138,0.8);
+}

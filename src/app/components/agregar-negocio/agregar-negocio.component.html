@@ -1,6 +1,9 @@
 <br><br>
-<div class="container fadeInAnimation center-content mt-5 screen-height" style="flex-direction: column;;">
-    <div class="box-shadow-black container form-box form-container" style="background-color: white;">
+<div class="container fadeInAnimation center-content mt-5 screen-height" style="flex-direction: column;">
+
+    <app-loading *ngIf="this.cargando"></app-loading>
+
+    <div class="box-shadow-black container form-box form-container" style="background-color: white;" *ngIf="!this.cargando">
         <!--DATOS GENERALES-->
         <div *ngIf="currentPage === 1">
             <form [formGroup]="nuevoForm" (ngSubmit)="nuevoSubmitted1()">
@@ -19,7 +22,7 @@
                     </div>
                     <div class="form-text text-danger"
                         *ngIf="nuevoForm.get('nombre')?.hasError('minlength') || nuevoForm.get('nombre')?.hasError('maxlength')  && Nombre.touched">
-                        Debe contar con un mínimo de 3 caracteres y un máximo de 100.
+                        Debe contar con un mínimo de 3 caracteres y un máximo de 50.
                     </div>
                     <div class="form-text text-danger"
                         *ngIf="nuevoForm.get('nombre')?.hasError('noWhitespace') && nuevoForm.get('nombre')?.touched">
@@ -41,7 +44,7 @@
                     </div>
                     <div class="form-text text-danger"
                         *ngIf="nuevoForm.get('descripcion')?.hasError('minlength') || nuevoForm.get('descripcion')?.hasError('maxlength')  && Descripcion.touched">
-                        Debe contar con un mínimo de 10 caracteres y un máximo de 500.
+                        Debe contar con un mínimo de 10 caracteres y un máximo de 600.
                     </div>
                     <div class="form-text text-danger"
                         *ngIf="nuevoForm.get('descripcion')?.hasError('noWhitespace') && nuevoForm.get('descripcion')?.touched">
@@ -52,13 +55,10 @@
 
                 <!--categoria-->
                 <div class="form-outline mb-4">
-                    <label class="form-label" for="categoria">Seleccione la categoria del negocio *</label>
-                    <select name="categoria" formControlName="categoria" class="form-select form-select-lg mb-3"
-                        aria-label=".form-select-lg example">
-                        <option>Comida</option>
-                        <option selected value="Joyeria">Joyeria</option>
-                        <option value="Tecnologia">Tecnologia</option>
-                        <option value="Otra">Otra</option>
+                    <label class="form-label" for="categoria">Categoria *</label>
+                    <select  class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="categoria" formControlName="categoria" (change)="onCategoriaChange($event)">
+                        <option value="" disabled selected>Selecciona una categoría</option>
+                        <option *ngFor="let cat of categoriasArray" [value]="cat.nombre">{{ cat.nombre.toUpperCase() }}</option>
                     </select>
                     <!--validaciones-->
                     <div class="form-text text-danger"
@@ -149,7 +149,7 @@
                 <div class="container mb-3">
                     <div class="row">
                         <div class="col">
-                            <p>¿Tu negocio cuenta con una dirección fisíca?</p>
+                            <p class="web-color">¿Tu negocio cuenta con una dirección fisíca?</p>
                         </div>
                     </div>
                     <div class="row">
@@ -474,13 +474,12 @@
                     <p *ngIf="nuevoForm4.invalid || nuevoForm3.invalid || nuevoForm2.invalid || nuevoForm.invalid"
                         class="text-danger text-center">Error en alguno de los formularios. Favor de verificar
                     </p>
-                    <button class="btn btn-success mt-1"
-                        type="submit">CREAR</button>
-                    <!--
-                        <button [disabled]="nuevoForm5.invalid || nuevoForm4.invalid || nuevoForm3.invalid || nuevoForm2.invalid || nuevoForm.invalid" class="btn btn-success mt-1"
+                     <!-- <button class="btn btn-success mt-1"
+                        type="submit">CREAR</button>  -->
+                        <button [disabled]="nuevoForm5.invalid || nuevoForm4.invalid || nuevoForm3.invalid || nuevoForm2.invalid || nuevoForm.invalid" class="btn btn-outline-success mt-1"
                         type="submit">CREAR
                     </button>
-                -->
+                
                 </div>
             </form>
         </div>
@@ -506,7 +505,7 @@
                 <li class="page-item" [class.active]="currentPage === 5" [class.disabled]="!this.guardar4">
                     <a class="page-link round" (click)="goToPage(5)">5</a>
                 </li>
-                <li class="page-item" [class.active]="currentPage === 6" >
+                <li class="page-item" [class.active]="currentPage === 6"  [class.disabled]="!this.guardar5">
                     <a class="page-link round" (click)="goToPage(6)">6</a>
                 </li>
                 <!-- Agrega más páginas según sea necesario -->

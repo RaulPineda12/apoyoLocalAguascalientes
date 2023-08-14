@@ -10,21 +10,28 @@ export class NegocioService {
   constructor(private http: HttpClient) { }
 
   //url
-  url = 'https://localhost:44387/api/Negocios/';
+  url = 'https://zoonicoo-001-site1.htempurl.com/api/Negocios/';
+  urlLocal= 'https://localhost:44387/api/Negocios/'
 
   //obtiene todos los negocios
-  cargarNegocios() {
-    try{
-      return this.http.get("");
-    }
-    catch(e){
-      return e;
-    }
+  getNegocios(){
+    return this.http.get(this.url);
   }
 
-  //obtener negocio por nombre
-  getNegocio(nombre:string){
-    return this.http.get(this.url+`Negocio/${nombre}`)
+  //obtener negocios por categoria
+  getPorCategoria(categoria:any){
+    const categoriaCodificada = encodeURIComponent(categoria);
+    return this.http.get(this.url+`Categoria/${categoriaCodificada}`)
+  }
+
+  //obtener negocio por id
+  getNegocio(id:any){
+    return this.http.get(this.url+`${id}`)
+  }
+
+  //eliminar negocio por id
+  eliminar(id:any){
+    return this.http.post(this.url+`Eliminar/${id}`, {id})
   }
 
   //agregar articulo

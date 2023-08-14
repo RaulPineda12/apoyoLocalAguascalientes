@@ -5,10 +5,6 @@ import { AgmCoreModule } from '@agm/core'; // Importa el módulo AGM
 //reactive forms
 import { ReactiveFormsModule } from '@angular/forms';
 
-
-
-
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -19,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AgregarNegocioComponent } from './components/agregar-negocio/agregar-negocio.component';
 import { FormsModule } from '@angular/forms';
 import { CategoriaComponent } from './components/categoria/categoria.component';
+import { LoadingComponent } from './components/shared/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +25,8 @@ import { CategoriaComponent } from './components/categoria/categoria.component';
     FooterComponent,
     NegocioComponent,
     AgregarNegocioComponent,
-    CategoriaComponent
+    CategoriaComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
